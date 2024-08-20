@@ -1,5 +1,5 @@
-﻿using Bloggig.Domain.Entities;
-using Bloggig.Infra.Persistance;
+﻿using Bloggig.Infra.Persistance;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggig.Presentation.Controllers;
@@ -15,24 +15,10 @@ public class UserController : Controller
         _dbContext = dbContext;
     }
 
-    [HttpPost]
-    public async Task CreateAsync()
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> CreateAsync()
     {
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            OAuthId = "",
-            OAuthProvider = "Google",
-            PasswordHash = "13234234",
-            ProfileImageUrl = "",
-            Username = "Dudu",
-            Email = "teste@gmail.com",
-            CreatedAt = DateTime.Now,
-        };
-
-        await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
-
-        Ok(user);
+        return Ok("Ok");
     }
 }
