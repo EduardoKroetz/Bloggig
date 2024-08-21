@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login-button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+            .login-button:hover {
+                background-color: #357ae8;
+            }
+
+            .login-button:focus {
+                outline: none;
+            }
+
+        p {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <button class="login-button" onclick="loginWithGoogle()">Login com Google</button>
+        <p>Ou <a href="#">crie uma nova conta</a>.</p>
+    </div>
+
+    <script>
+        function loginWithGoogle() {
+            // Redireciona para o endpoint de login do Google
+            window.location.href = "/api/auth/oauth/google/login";
+        }
+    </script>
+</body>
+</html>
