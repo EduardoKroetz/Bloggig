@@ -1,5 +1,6 @@
 ﻿
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Bloggig.Infra.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Text;
@@ -47,7 +48,15 @@ public class AzureBlobStorageService : IAzureBlobStorageService
         {
             var blobClient = containerClient.GetBlobClient(blobName);
 
-            await blobClient.UploadAsync(stream, overwrite: true);
+            var blobHttpHeader = new BlobHttpHeaders
+            {
+                ContentType = "image/jpeg"
+            };
+
+            await blobClient.UploadAsync(stream, new BlobUploadOptions
+            {
+                HttpHeaders = blobHttpHeader
+            });
         }
 
         //Formatar a url pública da imagem

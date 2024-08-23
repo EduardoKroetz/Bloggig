@@ -6,7 +6,7 @@ using Bloggig.Infra.Persistance.Repositories;
 using Bloggig.Infra.Services;
 using Bloggig.Infra.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -17,7 +17,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
+builder.Services.Configure<ApiBehaviorOptions>(options => 
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
+builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
 builder.Services.AddScoped<IGoogleApiService, GoogleApiService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -48,11 +53,11 @@ app.Run();
 
 void LoadAutheticationConfig()
 {
-    var googleClientId = builder.Configuration.GetValue<string>("GoogleClientId") ?? throw new Exception("Google client id not found");
-    var googleClientSecret = builder.Configuration.GetValue<string>("GoogleClientSecret") ?? throw new Exception("Google client secret not found");
-    var jwtKey = builder.Configuration.GetValue<string>("JwtKey") ?? throw new Exception("Jwt key not found");
-    var validIssuer = builder.Configuration.GetValue<string>("JwtIssuer") ?? throw new Exception("Issuer not found");
-    var validAudience = builder.Configuration.GetValue<string>("JwtAudience") ?? throw new Exception("Audience not found");
+    var googleClientId = builder.Configuration.GetValue<string>("Google:ClientId") ?? throw new Exception("Google client id not found");
+    var googleClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret") ?? throw new Exception("Google client secret not found");
+    var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key") ?? throw new Exception("Jwt key not found");
+    var validIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer") ?? throw new Exception("Issuer not found");
+    var validAudience = builder.Configuration.GetValue<string>("Jwt:Audience") ?? throw new Exception("Audience not found");
     var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? throw new Exception("Frontend Url not found");
     builder.Services.AddAuthentication(options =>
     {

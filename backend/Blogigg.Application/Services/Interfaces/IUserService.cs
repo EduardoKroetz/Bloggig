@@ -6,7 +6,8 @@ namespace Bloggig.Domain.Services;
 public interface IUserService
 {
     Task<User> GetUserByEmailAsync(string email);
-    Task AddUserAsync(CreateUserDto user);
+    Task AddUserAsync(CreateOAuthUserDto user);
+    Task<User> AddUserAsync(CreateUserDto user);
     Task UpdateUserAsync(User user);
 
 }

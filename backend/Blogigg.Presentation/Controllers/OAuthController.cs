@@ -65,11 +65,10 @@ public class OAuthController : Controller
         if (userExists == null)
         {
             //Cria um novo usuário
-            var createUserDto = new CreateUserDto
+            var createUserDto = new CreateOAuthUserDto
             {
                 Username = userInfo.Name,
                 Email = userInfo.Email,
-                IsOAuthUser = true,
                 Password = "",  // Senha vazia para usuários OAuth
                 ProfileImageUrl = userInfo.Picture,  
             };
