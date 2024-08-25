@@ -14,7 +14,7 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
         return await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
     }
@@ -28,6 +28,17 @@ public class UserRepository : IUserRepository
     public async Task UpdateAsync(User user)
     {
         _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public Task<User?> GetUserByIdAsync(Guid id)
+    {
+        return _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task DeleteAsync(User user)
+    {
+        _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
 }

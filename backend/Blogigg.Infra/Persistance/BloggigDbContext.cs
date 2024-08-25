@@ -20,7 +20,9 @@ public class BloggigDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>();
+        modelBuilder.Entity<User>()
+            .HasIndex(x => x.Email).IsUnique();
+
         modelBuilder.Entity<Post>();
         modelBuilder.Entity<Comment>();
 

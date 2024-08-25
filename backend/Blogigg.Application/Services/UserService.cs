@@ -16,9 +16,14 @@ public class UserService : IUserService
         _azureBlobStorageService = azureBlobStorageService;
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
         return await _userRepository.GetUserByEmailAsync(email);
+    }
+
+    public async Task<User?> GetUserByIdAsync(Guid id)
+    {
+        return await _userRepository.GetUserByIdAsync(id);
     }
 
     public async Task AddUserAsync(CreateOAuthUserDto dto)
@@ -64,5 +69,10 @@ public class UserService : IUserService
         await _userRepository.AddAsync(user);
 
         return user;
+    }
+
+    public async Task DeleteUserAsync(User user)
+    {
+        await _userRepository.DeleteAsync(user);
     }
 }
