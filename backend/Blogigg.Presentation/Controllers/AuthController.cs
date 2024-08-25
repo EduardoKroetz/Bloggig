@@ -57,14 +57,14 @@ public class AuthController : Controller
         var user = await _userService.GetUserByEmailAsync(loginDto.Email);
         if (user == null)
         {
-            return BadRequest("Email ou senha inválidos");
+            return BadRequest(ResultDto.BadResult("Email ou senha inválidos"));
         }
 
         //Verificar se a senha hash do usuário é igual a senha enviada
         var validPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
         if (!validPassword)
         {
-            return BadRequest("Email ou senha inválidos");
+            return BadRequest(ResultDto.BadResult("Email ou senha inválidos"));
         }
 
         //Setar o cookie na resposta

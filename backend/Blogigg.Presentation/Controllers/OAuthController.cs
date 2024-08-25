@@ -49,13 +49,13 @@ public class OAuthController : Controller
         var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         if (!authenticateResult.Succeeded)
         {
-            return BadRequest("Falha na autenticação");
+            return BadRequest(ResultDto.BadResult("Falha na autenticação"));
         }
 
         var accessToken = authenticateResult.Properties.Items["access_token"];
         if (string.IsNullOrEmpty(accessToken))
         {
-            return BadRequest("Token de acesso não encontrado");
+            return BadRequest(ResultDto.BadResult("Token de acesso não encontrado"));
         }
 
         //Solicita as informações do usuário ao google 
