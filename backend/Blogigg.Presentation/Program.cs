@@ -1,6 +1,6 @@
 using Bloggig.Application.Services;
+using Bloggig.Application.Services.Interfaces;
 using Bloggig.Domain.Repositories;
-using Bloggig.Domain.Services;
 using Bloggig.Infra.Persistance;
 using Bloggig.Infra.Persistance.Repositories;
 using Bloggig.Infra.Services;
@@ -24,6 +24,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
 builder.Services.AddScoped<IGoogleApiService, GoogleApiService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 

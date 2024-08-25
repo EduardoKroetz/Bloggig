@@ -1,5 +1,5 @@
 ﻿using Bloggig.Application.DTOs;
-using Bloggig.Domain.Services;
+using Bloggig.Application.Services;
 using Bloggig.Infra.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -36,7 +36,7 @@ public class OAuthController : Controller
     [HttpGet("google/login")]
     public IActionResult LoginWithGoogle()
     {
-        var redirectUrl = Url.Action("OAuthRedirect", "Auth");
+        var redirectUrl = Url.Action("OAuthRedirect", "OAuth");
         var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }

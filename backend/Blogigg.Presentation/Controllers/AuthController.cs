@@ -1,12 +1,9 @@
-﻿using Azure;
-using Bloggig.Application.DTOs;
-using Bloggig.Domain.Services;
+﻿using Bloggig.Application.DTOs;
+using Bloggig.Application.DTOs.Authentication;
+using IAuthenticationService = Bloggig.Application.Services.Interfaces.IAuthenticationService;
 using Bloggig.Presentation.Extensions;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Bloggig.Application.Services;
 
 namespace Bloggig.Presentation.Controllers;
 
@@ -15,10 +12,12 @@ namespace Bloggig.Presentation.Controllers;
 public class AuthController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IAuthenticationService _authenticationService;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, IAuthenticationService authenticationService)
     {
         _userService = userService;
+        _authenticationService = authenticationService;
     }
 
     [HttpPost("register")]
@@ -39,20 +38,40 @@ public class AuthController : Controller
         //Subir a imagem do usuário para o Azure Blob Storage e salvar o usuário no banco de dados
         var user = await _userService.AddUserAsync(createUser);
 
-        //Cria uma lista de claims
-        var claims = new List<Claim>
-        {
-            new (ClaimTypes.Name, user.Username),
-            new (ClaimTypes.Email, user.Email),
-            new (ClaimTypes.NameIdentifier, user.Id.ToString())
-        };
-
-        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        
-        //Autenticar o usuário e definir o cookie
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+        //Setar o cookie na resposta
+        await _authenticationService.SetCookieAsync(HttpContext, user);
 
         return Ok(ResultDto.SuccessResult(new { }, "Usuário registrado com sucesso!"));
     }
-    
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    {
+        //Validar model state
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ResultDto.BadResult(ModelState.GetFirstError()));
+        }
+
+        //Buscar o usuário pelo email
+        var user = await _userService.GetUserByEmailAsync(loginDto.Email);
+        if (user == null)
+        {
+            return BadRequest("Email ou senha inválidos");
+        }
+
+        //Verificar se a senha hash do usuário é igual a senha enviada
+        var validPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
+        if (!validPassword)
+        {
+            return BadRequest("Email ou senha inválidos");
+        }
+
+        //Setar o cookie na resposta
+        await _authenticationService.SetCookieAsync(HttpContext, user);
+
+        return Ok(ResultDto.SuccessResult(new { }, "Usuário logado com sucesso!"));
+    }
+
+
 }

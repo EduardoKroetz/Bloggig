@@ -1,7 +1,6 @@
 ﻿using Bloggig.Application.DTOs;
 using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
-using Bloggig.Domain.Services;
 using Bloggig.Infra.Services.Interfaces;
 
 namespace Bloggig.Application.Services;

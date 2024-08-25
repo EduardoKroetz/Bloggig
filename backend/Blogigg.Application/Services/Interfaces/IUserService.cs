@@ -1,7 +1,7 @@
 ﻿using Bloggig.Application.DTOs;
 using Bloggig.Domain.Entities;
 
-namespace Bloggig.Domain.Services;
+namespace Bloggig.Application.Services;
 
 public interface IUserService
 {
