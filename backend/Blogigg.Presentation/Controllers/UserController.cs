@@ -13,6 +13,14 @@ public class UserController : Controller
 {
     private readonly IUserService _userService;
 
+    private Guid GetUserIdFromClaim()
+    {
+        return new Guid
+        (
+            User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("Não foi possível obter o id do usuário, faça login novamente")
+        );
+    }
+
     public UserController(IUserService userService)
     {
         _userService = userService;
@@ -23,10 +31,7 @@ public class UserController : Controller
     public async Task<IActionResult> GetUserAsync()
     {
         //Pegar o id do usuário da claim
-        var userId = new Guid
-        (
-            User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("Não foi possível obter o id do usuário, faça login novamente")
-        );
+        var userId = GetUserIdFromClaim();
         
         //Buscar o usuário pelo id 
         var user = await _userService.GetUserByIdAsync(userId);
@@ -45,5 +50,27 @@ public class UserController : Controller
         };
 
         return Ok(ResultDto.SuccessResult(dto, "Sucesso!"));
+    }
+
+
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> PutUserAsync([FromBody] UpdateUserDto updateUserDto)
+    {
+        var userId = GetUserIdFromClaim();
+
+        //Buscar o usuário
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return NotFound("Usuário não encontrado");
+        }
+
+        user.UpdateEmail(updateUserDto.Email);
+        user.UpdateUsername(updateUserDto.Username);
+
+        await _userService.UpdateUserAsync(user);
+
+        return Ok(ResultDto.SuccessResult(new { }, "Usuário atualizado com sucesso!"));
     }
 }
