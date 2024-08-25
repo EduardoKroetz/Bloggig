@@ -10,5 +10,6 @@ public interface IUserService
     Task AddUserAsync(CreateOAuthUserDto user);
     Task<User> AddUserAsync(CreateUserDto user);
     Task UpdateUserAsync(User user);
+    Task DeleteUserAsync(User user);
 
 }
