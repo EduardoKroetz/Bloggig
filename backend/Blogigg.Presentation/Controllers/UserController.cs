@@ -1,6 +1,9 @@
-﻿using Bloggig.Infra.Persistance;
+﻿using Bloggig.Application.DTOs;
+using Bloggig.Application.DTOs.Users;
+using Bloggig.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Bloggig.Presentation.Controllers;
 
@@ -8,17 +11,39 @@ namespace Bloggig.Presentation.Controllers;
 [Route("api/users")]
 public class UserController : Controller
 {
-    private readonly BloggigDbContext _dbContext;
+    private readonly IUserService _userService;
 
-    public UserController(BloggigDbContext dbContext)
+    public UserController(IUserService userService)
     {
-        _dbContext = dbContext;
-    }
+        _userService = userService;
+    } 
 
-    [Authorize]
     [HttpGet]
-    public async Task<IActionResult> CreateAsync()
+    [Authorize]
+    public async Task<IActionResult> GetUserAsync()
     {
-        return Ok("Ok");
+        //Pegar o id do usuário da claim
+        var userId = new Guid
+        (
+            User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("Não foi possível obter o id do usuário, faça login novamente")
+        );
+        
+        //Buscar o usuário pelo id 
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null) 
+        {
+            return NotFound("Usuário não encontrado");
+        }
+
+        //Criar o dto para retorno dos dados
+        var dto = new GetUserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Username = user.Username,
+            ProfileImageUrl = user.ProfileImageUrl,
+        };
+
+        return Ok(ResultDto.SuccessResult(dto, "Sucesso!"));
     }
 }
