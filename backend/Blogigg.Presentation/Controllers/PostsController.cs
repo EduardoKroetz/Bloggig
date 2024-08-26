@@ -14,11 +14,13 @@ public class PostsController : ControllerBase
 {
     private IUserService _userService;
     private IPostService _postService;
+    private ITagService _tagService;
 
-    public PostsController(IUserService userService, IPostService postService)
+    public PostsController(IUserService userService, IPostService postService, ITagService tagService)
     {
         _userService = userService;
         _postService = postService;
+        _tagService = tagService;
     }
 
     [HttpPost]
@@ -38,7 +40,11 @@ public class PostsController : ControllerBase
             return NotFound(ResultDto.BadResult("Usuário não encontrado, faça login e tente novamente"));
         }
 
-        var post = await _postService.CreatePostAsync(editorPostDto, user.Username, userId);
+        //Buscar as tags e criar se elas não existirem
+        var tags = await _tagService.CreateTagsIfNotExistsAsync(editorPostDto.Tags);
+        
+        //Criar o post
+        var post = await _postService.CreatePostAsync(editorPostDto, tags, userId);
 
         return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }));
     }
@@ -75,7 +81,10 @@ public class PostsController : ControllerBase
             return BadRequest(ResultDto.BadResult("Você não pode editar posts de outros autores"));
         }
 
-        await _postService.UpdatePostAsync(editorPostDto, post);
+        //Buscar as tags e criar se elas não existirem
+        var tags = await _tagService.CreateTagsIfNotExistsAsync(editorPostDto.Tags);
+
+        await _postService.UpdatePostAsync(editorPostDto, tags, post);
 
         return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }, "Post atualizado com sucesso!"));
     }

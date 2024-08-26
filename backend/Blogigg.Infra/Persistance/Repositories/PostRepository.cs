@@ -21,7 +21,7 @@ public class PostRepository : IPostRepository
 
     public async Task<Post?> GetById(Guid id)
     {
-        return await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);   
+        return await _context.Posts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == id);   
     }
 
     public async Task<IEnumerable<Post>> GetByReferencesAsync(List<string> keyWords)

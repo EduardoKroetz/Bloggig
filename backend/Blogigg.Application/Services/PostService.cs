@@ -17,12 +17,12 @@ public class PostService : IPostService
         _postRepository = postRepository;
     }
 
-    public async Task<Post> CreatePostAsync(EditorPostDto editorPostDto, string username ,Guid userId)
+    public async Task<Post> CreatePostAsync(EditorPostDto editorPostDto, List<Tag> tags ,Guid userId)
     {
         //Como a thumbnail é opcional,
         //verificar se a imagem base 64 existe para então carregar no blob
         string thumbnailUrl = null;
-        if (editorPostDto.Base64Thumbnail != null)
+        if (!string.IsNullOrEmpty(editorPostDto.Base64Thumbnail))
         {
            thumbnailUrl = await _azureBlobStorageService.UploadPostThumbnailAsync(editorPostDto.Base64Thumbnail, editorPostDto.Title);
         }
@@ -35,7 +35,7 @@ public class PostService : IPostService
             Content = editorPostDto.Content,
             ThumbnailUrl = thumbnailUrl,
             Status = "created",
-            Tags = [],
+            Tags = tags,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
         };
@@ -69,7 +69,7 @@ public class PostService : IPostService
         }).ToList();
     }
 
-    public async Task UpdatePostAsync(EditorPostDto editorPostDto, Post post)
+    public async Task UpdatePostAsync(EditorPostDto editorPostDto, List<Tag> tags, Post post)
     {
         if (!string.IsNullOrEmpty(editorPostDto.Base64Thumbnail))
         {
@@ -87,6 +87,7 @@ public class PostService : IPostService
         post.Content = editorPostDto.Content;
         post.Status = "updated";
         post.UpdatedAt = DateTime.Now;
+        post.Tags = tags;
 
         await _postRepository.UpdateAsync(post);
     }

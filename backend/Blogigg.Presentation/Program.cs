@@ -27,10 +27,12 @@ builder.Services.AddScoped<IGoogleApiService, GoogleApiService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 
 //Adiciona DbContext e a conexão com o SQL Server

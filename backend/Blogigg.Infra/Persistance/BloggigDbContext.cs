@@ -25,7 +25,8 @@ public class BloggigDbContext : DbContext
         modelBuilder.Entity<Post>();
         modelBuilder.Entity<Comment>();
 
-        modelBuilder.Entity<Tag>();
+        modelBuilder.Entity<Tag>()
+            .HasIndex(x => x.Name).IsUnique();
 
         modelBuilder.Entity<Tag>()
             .HasMany(t => t.Posts)

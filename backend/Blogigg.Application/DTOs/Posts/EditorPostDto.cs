@@ -10,4 +10,5 @@ public class EditorPostDto
     [Required(ErrorMessage = "Informe o conteúdo")]
     public string Content { get; set; }
     public string? Base64Thumbnail { get; set; }
+    public string[] Tags { get; set; } = [];
 }
