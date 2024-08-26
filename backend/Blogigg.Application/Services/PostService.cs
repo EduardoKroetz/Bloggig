@@ -39,4 +39,19 @@ public class PostService : IPostService
         return post;
     }
 
+    public async Task<IEnumerable<GetPostDto>> GetPostsByReference(string reference)
+    {
+        var keys = reference.Split(" ").Where(x => x.Length > 3).ToList();
+
+        var posts = await _postRepository.GetByReferencesAsync(keys);
+
+        return posts.Select(x => new GetPostDto
+        {
+            Id = x.Id,
+            AuthorId = x.AuthorId,
+            Content = x.Content,
+            ThumbnailUrl = x.ThumbnailUrl,
+            Title = x.Title
+        }).ToList();
+    }
 }

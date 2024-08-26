@@ -43,6 +43,12 @@ public class PostsController : ControllerBase
         return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }));
     }
 
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchPostAsync([FromQuery] string reference)
+    {
+        var posts = await _postService.GetPostsByReference(reference);
+        return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
+    }
 
 
 }

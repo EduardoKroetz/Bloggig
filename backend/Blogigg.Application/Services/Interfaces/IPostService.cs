@@ -7,4 +7,5 @@ namespace Bloggig.Application.Services.Interfaces;
 public interface IPostService
 {
     Task<Post> CreatePostAsync(CreatePostDto createPostDto, string username, Guid userId);
+    Task<IEnumerable<GetPostDto>> GetPostsByReference(string reference);
 }
