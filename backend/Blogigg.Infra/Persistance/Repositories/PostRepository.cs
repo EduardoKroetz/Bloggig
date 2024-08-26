@@ -19,6 +19,11 @@ public class PostRepository : IPostRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<Post?> GetById(Guid id)
+    {
+        return await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);   
+    }
+
     public async Task<IEnumerable<Post>> GetByReferencesAsync(List<string> keyWords)
     {
         var reference = string.Join(" ", keyWords);
@@ -28,5 +33,11 @@ public class PostRepository : IPostRepository
                     keyWords.Contains(tag.Name)) || 
                 p.Title.Contains(reference))
             .ToListAsync();
+    }
+
+    public async Task UpdateAsync(Post post)
+    {
+        _context.Update(post);
+        await _context.SaveChangesAsync();
     }
 }

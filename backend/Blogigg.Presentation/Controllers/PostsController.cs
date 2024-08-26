@@ -23,7 +23,7 @@ public class PostsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> CreatePostAsync([FromBody] CreatePostDto createPostDto)
+    public async Task<IActionResult> CreatePostAsync([FromBody] EditorPostDto editorPostDto)
     {
         if (!ModelState.IsValid)
         {
@@ -38,7 +38,7 @@ public class PostsController : ControllerBase
             return NotFound(ResultDto.BadResult("Usuário não encontrado, faça login e tente novamente"));
         }
 
-        var post = await _postService.CreatePostAsync(createPostDto, user.Username, userId);
+        var post = await _postService.CreatePostAsync(editorPostDto, user.Username, userId);
 
         return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }));
     }
@@ -50,5 +50,34 @@ public class PostsController : ControllerBase
         return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
     }
 
+    [HttpPut("{id:guid}")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePostAsync([FromBody] EditorPostDto editorPostDto, [FromRoute] Guid id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ResultDto.BadResult(ModelState.GetFirstError()));
+        }
 
+        //Pegar o id do usuário da Claim
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+
+        //Buscar o post
+        var post = await _postService.GetPostById(id);
+        if (post == null)
+        {
+            return NotFound(ResultDto.BadResult("Post não encontrado"));
+        }
+
+        //Verificar se quem está tentando alterar o post é quem criou
+        if (post.AuthorId != userId)
+        {
+            return BadRequest(ResultDto.BadResult("Você não pode editar posts de outros autores"));
+        }
+
+        await _postService.UpdatePostAsync(editorPostDto, post);
+
+        return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }, "Post atualizado com sucesso!"));
+    }
 }
+    

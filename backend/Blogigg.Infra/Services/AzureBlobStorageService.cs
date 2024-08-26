@@ -69,7 +69,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
     }
 
 
-    public async Task<string> UploadPostThumbnailAsync(string Base64Img, string username, string postTitle)
+    public async Task<string> UploadPostThumbnailAsync(string Base64Img, string postTitle)
     {
         var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new Exception("Invalid blob posts thumbnail container name");
         //Busca o container de imagens
@@ -83,8 +83,6 @@ public class AzureBlobStorageService : IAzureBlobStorageService
 
         //Criar um nome único para o blob
         var blobStrBuilder = new StringBuilder();
-        blobStrBuilder.Append(username);
-        blobStrBuilder.Append('-');
         blobStrBuilder.Append(postTitle.Replace(' ', '-').ToLower());
         blobStrBuilder.Append('-');
         blobStrBuilder.Append(new Random(6).Next());
@@ -115,5 +113,36 @@ public class AzureBlobStorageService : IAzureBlobStorageService
             .Append(blobName);
 
         return imgStrBuilder.ToString();
+    }
+
+    public async Task DeletePostThumbnailAsync(string thumbnailUrl)
+    {
+        //Pega o nome do blob
+        var blobName = thumbnailUrl.Split('/').Last();
+
+        var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new Exception("Invalid blob posts thumbnail container name");
+        
+        //Busca o container de imagens
+        var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
+
+        //Busca o blob
+        var blobClient = containerClient.GetBlobClient(blobName);
+
+        //Deleta o blob
+        await blobClient.DeleteAsync();
+    }
+
+    public async Task DeleteProfileImageAsync(string profileImgUrl)
+    {
+        var blobName = profileImgUrl.Split('/').Last();
+
+        var blobContainerName = _configuration["Azure:BlobProfileImagesContainerName"] ?? throw new Exception("Invalid blob profile images container name");
+        
+        //Busca o container de imagens
+        var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
+
+        var blobClient = containerClient.GetBlobClient(blobName);
+
+        await blobClient.DeleteAsync();
     }
 }
