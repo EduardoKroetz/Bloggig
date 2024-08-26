@@ -23,7 +23,8 @@ public class BloggigDbContext : DbContext
             .HasIndex(x => x.Email).IsUnique();
 
         modelBuilder.Entity<Post>();
-        modelBuilder.Entity<Comment>();
+        modelBuilder.Entity<Comment>()
+            .HasOne(x => x.Author);
 
         modelBuilder.Entity<Tag>()
             .HasIndex(x => x.Name).IsUnique();

@@ -100,4 +100,18 @@ public class CommentsController : ControllerBase
 
     }
 
+    [HttpGet("posts/{postId:guid}")]
+    public async Task<IActionResult> GetPostCommentsAsync([FromRoute] Guid postId, [FromQuery] int pageSize, [FromQuery] int pageNumber)
+    {
+        //Buscar o post
+        var post = await _postService.GetPostById(postId);
+        if (post == null)
+        {
+            return NotFound(ResultDto.BadResult("Post não encontrado"));
+        }
+
+        var comments = await _commentService.GetPostComments(postId, pageSize, pageNumber);
+
+        return Ok(ResultDto.SuccessResult(comments, "Sucesso!"));
+    }
 }

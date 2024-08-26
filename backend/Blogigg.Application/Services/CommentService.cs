@@ -1,6 +1,7 @@
 ﻿
 
 using Bloggig.Application.DTOs.Comments;
+using Bloggig.Application.DTOs.Users;
 using Bloggig.Application.Services.Interfaces;
 using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
@@ -40,6 +41,27 @@ public class CommentService : ICommentService
     public async Task<Comment?> GetCommentById(Guid id)
     {
         return await _commentRepository.GetById(id);
+    }
+
+    public async Task<IEnumerable<GetComment>> GetPostComments(Guid postId, int pageSize, int pageNumber)
+    {
+        var comments = await _commentRepository.GetPostComments(postId, pageSize, pageNumber);
+
+        return comments.Select(x => new GetComment
+        {
+            Id = x.Id,
+            AuthorId= x.AuthorId,
+            Content = x.Content,
+            PostId = x.PostId,
+            CreatedAt = x.CreatedAt,
+            Author = new GetUserDto 
+            { 
+                Id = x.Author.Id,
+                Email = x.Author.Email,
+                ProfileImageUrl = x.Author.ProfileImageUrl,
+                Username = x.Author.Username
+            }, 
+        }).ToList();
     }
 
     public async Task UpdateCommentAsync(UpdateCommentDto updateCommentDto, Comment comment)

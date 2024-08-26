@@ -30,6 +30,18 @@ public class CommentRepository : ICommentRepository
         return await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<IEnumerable<Comment>> GetPostComments(Guid postId, int pageSize, int pageNumber)
+    {
+        var skip = ( pageNumber - 1 ) * pageSize;
+
+        return await _context.Comments
+            .Include(x => x.Author)
+            .Where(x => x.PostId == postId)
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
     public async Task UpdateAsync(Comment comment)
     {
         _context.Comments.Update(comment);
