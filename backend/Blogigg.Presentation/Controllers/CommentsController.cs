@@ -65,12 +65,38 @@ public class CommentsController : ControllerBase
         //Verificar se quem está alterando o comentário foi quem criou
         if (comment.AuthorId != userId)
         {
-            return BadRequest(ResultDto.BadResult("Você não possui permissão para alterar comentário de outros usuários"));
+            return BadRequest(ResultDto.BadResult("Você não possui permissão para alterar o comentário de outros usuários"));
         }
 
         await _commentService.UpdateCommentAsync(updateCommentDto, comment);
 
-        return Ok(ResultDto.SuccessResult(new { comment.Id }, "Comentário criado com sucesso!"));
+        return Ok(ResultDto.SuccessResult(new { comment.Id }, "Comentário atualizado com sucesso!"));
+
+    }
+
+
+    [HttpDelete("{id:guid}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteCommentAsync([FromRoute] Guid id)
+    {
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+
+        //Buscar o comentário
+        var comment = await _commentService.GetCommentById(id);
+        if (comment == null)
+        {
+            return NotFound(ResultDto.BadResult("Comentário não encontrado"));
+        }
+
+        //Verificar se quem está deletando o comentário foi quem criou
+        if (comment.AuthorId != userId)
+        {
+            return BadRequest(ResultDto.BadResult("Você não possui permissão para deletar o comentário de outros usuários"));
+        }
+
+        await _commentService.DeleteCommentAsync(comment);
+
+        return Ok(ResultDto.SuccessResult(new { }, "Comentário deletado com sucesso!"));
 
     }
 
