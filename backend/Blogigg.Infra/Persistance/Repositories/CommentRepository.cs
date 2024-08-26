@@ -1,5 +1,6 @@
 ﻿using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggig.Infra.Persistance.Repositories;
 
@@ -18,18 +19,20 @@ public class CommentRepository : ICommentRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(Comment comment)
+    public async Task DeleteAsync(Comment comment)
     {
-        throw new NotImplementedException();
+        _context.Comments.Remove(comment);
+        await _context.SaveChangesAsync();
     }
 
-    public Task<Post> GetById(Guid id)
+    public async Task<Comment?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task UpdateAsync(Comment comment)
+    public async Task UpdateAsync(Comment comment)
     {
-        throw new NotImplementedException();
+        _context.Comments.Update(comment);
+        await _context.SaveChangesAsync();
     }
 }

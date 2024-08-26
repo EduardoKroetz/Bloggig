@@ -6,5 +6,6 @@ namespace Bloggig.Application.Services.Interfaces;
 public interface ICommentService
 {
     Task<Comment> CreateCommentAsync(CreateCommentDto createCommentDto, Guid userId);
-
+    Task<Comment?> GetCommentById(Guid id);
+    Task UpdateCommentAsync(UpdateCommentDto updateCommentDto, Comment comment);
 }

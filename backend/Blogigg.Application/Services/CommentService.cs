@@ -31,4 +31,16 @@ public class CommentService : ICommentService
 
         return newComment;
     }
+
+    public async Task<Comment?> GetCommentById(Guid id)
+    {
+        return await _commentRepository.GetById(id);
+    }
+
+    public async Task UpdateCommentAsync(UpdateCommentDto updateCommentDto, Comment comment)
+    {
+        comment.Content = updateCommentDto.Content;
+
+        await _commentRepository.UpdateAsync(comment);
+    }
 }
