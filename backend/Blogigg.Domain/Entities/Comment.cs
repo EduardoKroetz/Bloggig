@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Bloggig.Domain.Entities;
+﻿namespace Bloggig.Domain.Entities;
 
 public class Comment
 {
