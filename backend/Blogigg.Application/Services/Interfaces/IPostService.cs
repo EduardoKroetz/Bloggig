@@ -10,4 +10,5 @@ public interface IPostService
     Task<IEnumerable<GetPostDto>> GetPostsByReference(string reference);
     Task<Post?> GetPostById(Guid postId);
     Task UpdatePostAsync(EditorPostDto editorPostDto, Post post);
+    Task DeletePostAsync(Post post);
 }

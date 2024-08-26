@@ -79,5 +79,35 @@ public class PostsController : ControllerBase
 
         return Ok(ResultDto.SuccessResult(new { post.Id, post.ThumbnailUrl }, "Post atualizado com sucesso!"));
     }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize]
+    public async Task<IActionResult> DeletePostAsync([FromRoute] Guid id)
+    {
+        //Pegar o id do usuário da Claim
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+
+        //Buscar o post
+        var post = await _postService.GetPostById(id);
+        if (post == null)
+        {
+            return NotFound(ResultDto.BadResult("Post não encontrado"));
+        }
+
+        if (post.Status == "deleted")
+        {
+            return BadRequest(ResultDto.BadResult("Esse post já foi deletado"));
+        }
+
+        //Verificar se quem está tentando deletar o post é quem criou
+        if (post.AuthorId != userId)
+        {
+            return BadRequest(ResultDto.BadResult("Você não pode deletar posts de outros autores"));
+        }
+
+        await _postService.DeletePostAsync(post);
+
+        return Ok(ResultDto.SuccessResult(new { post.Id }, "Post deletado com sucesso!"));
+    }
 }
     

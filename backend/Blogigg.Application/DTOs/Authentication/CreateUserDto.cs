@@ -13,5 +13,5 @@ public class CreateUserDto
     [Required]
     [MinLength(6, ErrorMessage = "Informe uma senha com no mínimo 6 caracteres")]
     public string Password { get; set; }
-    public string ProfileBase64Img { get; set; }
+    public string? ProfileBase64Img { get; set; }
 }

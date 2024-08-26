@@ -91,4 +91,19 @@ public class PostService : IPostService
         await _postRepository.UpdateAsync(post);
     }
 
+    public async Task DeletePostAsync(Post post)
+    {
+        //Deletar a thumbnail se ela existir
+        if (!string.IsNullOrEmpty(post.ThumbnailUrl))
+        {
+            await _azureBlobStorageService.DeletePostThumbnailAsync(post.ThumbnailUrl);
+        }
+
+        post.Status = "deleted";
+        post.ThumbnailUrl = null;
+        post.UpdatedAt = DateTime.Now;
+
+        await _postRepository.UpdateAsync(post);
+    }
+
 }

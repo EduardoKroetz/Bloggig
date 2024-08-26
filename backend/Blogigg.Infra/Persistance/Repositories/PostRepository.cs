@@ -32,6 +32,7 @@ public class PostRepository : IPostRepository
                 p.Tags.Any(tag => 
                     keyWords.Contains(tag.Name)) || 
                 p.Title.Contains(reference))
+            .Where(p => p.Status != "deleted")
             .ToListAsync();
     }
 

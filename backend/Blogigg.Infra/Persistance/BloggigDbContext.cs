@@ -15,7 +15,6 @@ public class BloggigDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<Image> Images { get; set; }
     public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,8 +24,6 @@ public class BloggigDbContext : DbContext
 
         modelBuilder.Entity<Post>();
         modelBuilder.Entity<Comment>();
-
-        modelBuilder.Entity<Image>();
 
         modelBuilder.Entity<Tag>();
 

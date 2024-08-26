@@ -6,11 +6,11 @@ public class User
     public string Username { get; private set; }
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
-    public string ProfileImageUrl { get; private set; }
+    public string? ProfileImageUrl { get; private set; }
     public bool IsOAuthUser { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public User(Guid id, string username, string email, string passwordHash, string profileImageUrl, bool isOAuthUser, DateTime createdAt)
+    public User(Guid id, string username, string email, string passwordHash, string? profileImageUrl, bool isOAuthUser, DateTime createdAt)
     {
         Id = id;
         Username = username;

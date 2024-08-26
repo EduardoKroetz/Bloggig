@@ -49,8 +49,12 @@ public class UserService : IUserService
 
     public async Task<User> AddUserAsync(CreateUserDto dto)
     {
-        //Carregar a imagem de perfil do usuário no Azure Blob Storage e pegar a url disponível da imagem
-        var profileImgUrl = await _azureBlobStorageService.UploadProfileImageAsync(dto.ProfileBase64Img, dto.Username);
+        string profileImgUrl = null;
+        if (!string.IsNullOrEmpty(dto.ProfileBase64Img))
+        {
+            //Carregar a imagem de perfil do usuário no Azure Blob Storage e pegar a url disponível da imagem
+            profileImgUrl = await _azureBlobStorageService.UploadProfileImageAsync(dto.ProfileBase64Img, dto.Username);
+        }
 
         //Hashear senha
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
