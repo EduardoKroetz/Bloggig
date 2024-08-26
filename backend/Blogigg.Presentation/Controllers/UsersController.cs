@@ -6,24 +6,17 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Bloggig.Presentation.Utils;
 
 namespace Bloggig.Presentation.Controllers;
 
 [ApiController]
-[Route("api/users")]
-public class UserController : Controller
+[Route("api/[controller]")]
+public class UsersController : Controller
 {
     private readonly IUserService _userService;
 
-    private Guid GetUserIdFromClaim()
-    {
-        return new Guid
-        (
-            User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("Não foi possível obter o id do usuário, faça login novamente")
-        );
-    }
-
-    public UserController(IUserService userService)
+    public UsersController(IUserService userService)
     {
         _userService = userService;
     } 
@@ -33,7 +26,7 @@ public class UserController : Controller
     public async Task<IActionResult> GetUserAsync()
     {
         //Pegar o id do usuário da claim
-        var userId = GetUserIdFromClaim();
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
         
         //Buscar o usuário pelo id 
         var user = await _userService.GetUserByIdAsync(userId);
@@ -59,7 +52,7 @@ public class UserController : Controller
     [Authorize]
     public async Task<IActionResult> PutUserAsync([FromBody] UpdateUserDto updateUserDto)
     {
-        var userId = GetUserIdFromClaim();
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
 
         //Buscar o usuário
         var user = await _userService.GetUserByIdAsync(userId);
@@ -80,7 +73,7 @@ public class UserController : Controller
     [Authorize]
     public async Task<IActionResult> DeleteUserAsync()
     {
-        var userId = GetUserIdFromClaim();
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
 
         //Buscar o usuário
         var user = await _userService.GetUserByIdAsync(userId);
