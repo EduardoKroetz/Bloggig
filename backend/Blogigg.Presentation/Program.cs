@@ -91,7 +91,7 @@ void LoadAutheticationConfig()
         };
         options.Events.OnRedirectToLogin = context =>
         {
-            context.Response.Redirect($"/login.html"); //Redirecionar o usuário para tela de login no frontend
+            context.Response.Redirect($"{frontendUrl}/login"); //Redirecionar o usuário para tela de login no frontend
             return Task.CompletedTask;
         };
     })
