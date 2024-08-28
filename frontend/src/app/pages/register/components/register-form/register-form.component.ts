@@ -1,43 +1,50 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { EyeClosedIconComponent } from "../../../../components/eye-closed-icon/eye-closed-icon.component";
-import { EyeIconComponent } from "../../../../components/eye-icon/eye-icon.component";
-import { LoginService } from '../../../../services/login.service';
-import { FormsModule } from '@angular/forms';
 import { ErrorModalService } from '../../../../services/error-modal.service';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { EyeIconComponent } from "../../../../components/eye-icon/eye-icon.component";
+import { EyeClosedIconComponent } from "../../../../components/eye-closed-icon/eye-closed-icon.component";
 import { EmailInputComponent } from "../../../../components/email-input/email-input.component";
 import { PasswordInputComponent } from "../../../../components/password-input/password-input.component";
+import { UsernameInputComponent } from "../../../../components/username-input/username-input.component";
+import { RegisterService } from '../../../../services/register.service';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, EyeClosedIconComponent, EyeIconComponent, FormsModule, EmailInputComponent, PasswordInputComponent, RouterLink],
-  templateUrl: './login-form.component.html',
-  styleUrl: './login-form.component.css'
+  imports: [CommonModule, FormsModule, EyeIconComponent, EyeClosedIconComponent, EmailInputComponent, PasswordInputComponent, UsernameInputComponent, RouterLink],
+  templateUrl: './register-form.component.html',
+  styleUrl: './register-form.component.css'
 })
-export class LoginFormComponent {
+export class RegisterFormComponent {
+  username = ""
   email = "";
   password = "";
+  showPassword = false;
   isSubmitted = false;
   errorEmail : string | null = null;
   errorPassword: string | null = null;
 
-  constructor (private loginService: LoginService, private errorModalService: ErrorModalService, private router: Router ) {}
+  constructor (private registerService: RegisterService, private errorModalService: ErrorModalService, private router: Router ) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   handleSubmit(ev: Event){
     ev.preventDefault();
 
     this.isSubmitted = true;
-    console.log(this.email, this.password)
-    this.loginService.postLoginAsync(this.email, this.password).subscribe(
+
+    this.registerService.registerUser(this.username ,this.email, this.password).subscribe(
       (res) => {
         this.isSubmitted = false;
         //Redirecionar
-        this.router.navigate(['/feed']);
+        this.router.navigate(['/']);
       },
       (error) => {
-        console.log(error.error)
+        console.log(error);
         const errorMessage = error.error.message;
         const lowerErrorMessage = errorMessage.toLowerCase();
         const isErrorEmail = lowerErrorMessage.includes("email");
@@ -56,7 +63,6 @@ export class LoginFormComponent {
           this.errorModalService.toggleModal();
           this.errorModalService.modalMessage = errorMessage;
         }
-
         this.isSubmitted = false;
       }
     )

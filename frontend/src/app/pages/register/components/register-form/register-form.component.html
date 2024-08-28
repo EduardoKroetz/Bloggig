@@ -1,0 +1,8 @@
+<form (submit)="handleSubmit($event)" class="form w-full flex flex-col space-y-5" (click)="resetErrorFields()">
+  <app-username-input [(username)]="username"></app-username-input>
+  <app-email-input [(email)]="email" [errorEmail]="errorEmail"></app-email-input>
+  <app-password-input [(password)]="password" [errorPassword]="errorPassword"></app-password-input>
+  <button type="submit" [disabled]="isSubmitted" class="border w-full bg-blue-400 rounded-lg p-2 transition-colors duration-70 hover:bg-blue-500">{{ isSubmitted ? "Cadastrando..." : "Cadastrar" }}</button>
+  <a class="text-blue-500 hover:text-blue-700" routerLink="/login">Fazer login</a>
+</form>
+

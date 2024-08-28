@@ -1,34 +1,7 @@
-<form (submit)="handleSubmit($event)" class="form w-full space-y-5">
-  <div>
-    <label for="email">E-mail <span class="text-red-600" title="Endereço de email usado para fazer login">*</span></label>
-    <input type="text" id="email" autocomplete="email" name="email" 
-    class="rounded p-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
-    [ngClass]="errorEmail ? 'border-red-600 text-red-600' : 'border'"
-    [(ngModel)]="email"
-    (focus)="errorEmail = null"/>
-    
-    <div *ngIf="errorEmail" class="text-red-600">{{errorEmail}}</div>
-  </div>
-  <div class="relative">
-    <label for="password">Senha <span class="text-red-600" title="Senha que vai ser usada para fazer login">*</span></label>
-    <input 
-      [attr.type]="showPassword ? 'text' : 'password'" 
-      id="password" name="password"
-      [(ngModel)]="password"
-      autocomplete="current-password" 
-      class="rounded border p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"  
-      [ngClass]="errorPassword ? 'border-red-600 text-red-600' : 'border'"
-      (focus)="errorPassword = null"/>
-    <button type="button" class="absolute top-10 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none" (click)="togglePassword()">
-      <ng-container *ngIf="showPassword; else elseEyeClosed">
-        <app-eye-icon></app-eye-icon>
-      </ng-container>
-      <ng-template #elseEyeClosed>
-        <app-eye-closed-icon></app-eye-closed-icon>
-      </ng-template>
-    </button>
-    <div *ngIf="errorPassword" class="text-red-600">{{errorPassword}}</div>
-  </div>
+<form (submit)="handleSubmit($event)" class="form w-full flex flex-col space-y-5" (click)="resetErrorFields()">
+  <app-email-input [(email)]="email" [errorEmail]="errorEmail"></app-email-input>
+  <app-password-input [(password)]="password" [errorPassword]="errorPassword"></app-password-input>
   <button type="submit" [disabled]="isSubmitted" class="border w-full bg-blue-400 rounded-lg p-2 transition-colors duration-70 hover:bg-blue-500">{{ isSubmitted ? "Entrando..." : "Entrar" }}</button>
+  <a class="text-blue-500 hover:text-blue-700" routerLink="/register">Registre-se</a>
 </form>
 
