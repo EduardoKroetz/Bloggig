@@ -35,7 +35,14 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
-
+var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? throw new Exception("Frontend Url not found");
+builder.Services.AddCors(x => x.AddPolicy("BloggigFrontend", builder =>
+{
+    builder.WithOrigins(frontendUrl)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+}));
 
 //Adiciona DbContext e a conexão com o SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
@@ -56,6 +63,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseCors("BloggigFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -68,7 +76,6 @@ void LoadAutheticationConfig()
     var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key") ?? throw new Exception("Jwt key not found");
     var validIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer") ?? throw new Exception("Issuer not found");
     var validAudience = builder.Configuration.GetValue<string>("Jwt:Audience") ?? throw new Exception("Audience not found");
-    var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? throw new Exception("Frontend Url not found");
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -78,8 +85,9 @@ void LoadAutheticationConfig()
     .AddCookie(options =>
     {
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.Domain = "localhost";
         options.Events.OnValidatePrincipal = async context =>
         {
             var accessToken = context.Principal.FindFirst("access_token")?.Value;
@@ -91,7 +99,7 @@ void LoadAutheticationConfig()
         };
         options.Events.OnRedirectToLogin = context =>
         {
-            context.Response.Redirect($"{frontendUrl}/login"); //Redirecionar o usuário para tela de login no frontend
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return Task.CompletedTask;
         };
     })

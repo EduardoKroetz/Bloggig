@@ -4,6 +4,7 @@ using Bloggig.Infra.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using IAuthenticationService = Bloggig.Application.Services.Interfaces.IAuthenticationService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +18,15 @@ public class OAuthController : Controller
     private readonly IUserService _userService;
     private readonly IGoogleApiService _googleApiService;
     private readonly string _frontendUrl;
+    private readonly IAuthenticationService _authenticationService;
 
-    public OAuthController(IConfiguration configuration, IUserService userService, IGoogleApiService googleApiService)
+    public OAuthController(IConfiguration configuration, IUserService userService, IGoogleApiService googleApiService, IAuthenticationService authenticationService)
     {
         _configuration = configuration;
         _userService = userService;
         _googleApiService = googleApiService;
         _frontendUrl = _configuration["FrontendUrl"] ?? throw new Exception("Não foi possível obter a Url do site");
+        _authenticationService = authenticationService;
     }
 
     [Authorize]
@@ -84,6 +87,8 @@ public class OAuthController : Controller
             await _userService.UpdateUserAsync(userExists);
         }
 
-        return Redirect($"{_frontendUrl}/");
+        await _authenticationService.SetCookieAsync(HttpContext, userExists);
+
+        return Redirect(_frontendUrl);
     }
 }

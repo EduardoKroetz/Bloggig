@@ -60,6 +60,11 @@ public class AuthController : Controller
             return BadRequest(ResultDto.BadResult("Email ou senha inválidos"));
         }
 
+        if (user.IsOAuthUser)
+        {
+            return BadRequest(ResultDto.BadResult("Essa conta está vinculada a uma conta Google. Para continuar, faça login com o Google"));
+        }
+
         //Verificar se a senha hash do usuário é igual a senha enviada
         var validPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
         if (!validPassword)
