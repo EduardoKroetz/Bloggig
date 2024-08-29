@@ -34,7 +34,7 @@ export class LoginFormComponent {
       (res) => {
         this.isSubmitted = false;
         //Redirecionar
-        this.router.navigate(['/feed']);
+        window.location.href = "/"
       },
       (error) => {
         console.log(error.error)

@@ -1,0 +1,17 @@
+<div>
+  <div *ngIf="userProfileService.user; else elseNoUser">
+    <img class="rounded-full w-[50px]" *ngIf="userProfileService.user.profileImageUrl; else elseNoUserProfileImage" [src]="userProfileService.user.profileImageUrl" />
+  </div>
+</div>
+
+
+<ng-template #elseNoUserProfileImage>
+  <app-user-icon></app-user-icon>
+</ng-template>
+
+<ng-template #elseNoUser>
+  <div class="flex gap-5">
+    <app-register-button></app-register-button>
+    <app-login-button></app-login-button>
+  </div>
+</ng-template>

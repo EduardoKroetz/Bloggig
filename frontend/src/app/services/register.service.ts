@@ -11,6 +11,6 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
   registerUser(username: string, emaiL: string, password: string){
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, { username, emaiL, password })
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, { username, emaiL, password }, { withCredentials: true })
   }
 }

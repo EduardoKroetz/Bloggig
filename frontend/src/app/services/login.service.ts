@@ -11,6 +11,6 @@ export class LoginService {
 
   postLoginAsync(email: string, password: string) {
     var loginData = { email, password }
-    return this.http.post<any>(`${this.apiUrl}/auth/login`, loginData);
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, loginData, { withCredentials: true });
   }
 }
