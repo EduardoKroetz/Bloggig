@@ -8,11 +8,12 @@ import { UserProfileImgComponent } from "../../components/user-profile-img/user-
 import Post from '../../interfaces/Post';
 import { PostService } from '../../services/post.service';
 import { error } from 'console';
+import { PostModalComponent } from "../../components/post-modal/post-modal.component";
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, UserIconComponent, UserProfileImgComponent],
+  imports: [CommonModule, UserIconComponent, UserProfileImgComponent, PostModalComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -23,7 +24,9 @@ export class UserComponent implements OnInit {
   postsPageSize = 20;
   postsPageNumber = 1;
   loadingUser = true;
-
+  postModalIsOpen = false;
+  thePostModal : Post = null!;
+  
   constructor(private route: ActivatedRoute, private userProfileService: UserProfileService, private postService: PostService) { }
 
   ngOnInit(): void {
@@ -49,6 +52,21 @@ export class UserComponent implements OnInit {
           )
         }
     })
+  }
+
+  activePostModal(post: Post)
+  {
+    this.thePostModal = post;
+    this.togglePostModal();
+  }
+
+  togglePostModal() {
+    this.postModalIsOpen = !this.postModalIsOpen
+    let body = document.querySelector("body")!;
+    if (this.postModalIsOpen)
+      body.style.overflow = "hidden";
+    else
+      body.style.overflow = "auto";
   }
 
 }

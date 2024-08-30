@@ -1,0 +1,11 @@
+<ng-container *ngIf="modalIsOpen" class="relative">
+  <div 
+    #postmodalBackGround  
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    (click)="closeModalOnClickOutside($event, postmodalBackGround)">
+    <div class="bg-white p-0 flex flex-col items-center rounded shadow-md overflow-auto w-screen h-screen sm:max-h-[600px] max-w-[500px] sm:m-5 z-5" >
+      <app-close-icon class="p-2 cursor-pointer hover:bg-gray-100 duration-100 w-full flex justify-center"></app-close-icon>
+      <app-post [post]="post" (click)="$event.stopPropagation()"></app-post>
+    </div>
+  </div> 
+</ng-container>
