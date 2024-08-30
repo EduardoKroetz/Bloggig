@@ -1,6 +1,6 @@
 <div class="flex flex-col border rounded w-full gap-2 p-3 mb-3 text-sm sm:text-base">
   <div class="flex items-start gap-2">
-    <app-user-profile-img [routerLink]="authorProfileUrl"  [user]="post.author"></app-user-profile-img>
+    <app-user-profile-img [routerLink]="authorProfileUrl" [user]="post.author"></app-user-profile-img>
     <div>
       <p [routerLink]="authorProfileUrl" class="cursor-pointer hover:underline">{{ post.author.username | titlecase }}</p>
       <p class="text-xs">{{ post.createdAt | timeAgo }}</p>

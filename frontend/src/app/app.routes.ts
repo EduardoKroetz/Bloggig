@@ -4,6 +4,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { FeedComponent } from './pages/feed/feed.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { UserComponent } from './pages/user/user.component';
 
 export const routes: Routes = 
 [
@@ -20,7 +21,8 @@ export const routes: Routes =
     component: MainLayoutComponent,
     children: [
       { path: '', redirectTo: 'feed', pathMatch: 'full' },
-      { path: 'feed', component: FeedComponent }
+      { path: 'feed', component: FeedComponent },
+      { path: 'users/:id', component: UserComponent }
     ]
   },
   {

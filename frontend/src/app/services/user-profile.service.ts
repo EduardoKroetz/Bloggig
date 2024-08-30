@@ -1,23 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import User from '../interfaces/User';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserProfileService {
+export class UserProfileService  {
   apiUrl = environment.apiUrl;
-  user : User | null = null;
+  private _authenticatedUser = new BehaviorSubject<User | null>(null);
+  authenticatedUser$ = this._authenticatedUser.asObservable();
   loadingProfile = true;
   constructor(private http: HttpClient) {
-    this.getUserInfo();
+    this.getAuthenticatedUser();
+
   }
 
-  getUserInfo() {
+  getUserById(userId: string) {
+    return this.http.get(`${this.apiUrl}/users/${userId}`);
+  }
+
+  private getAuthenticatedUser() {
     this.http.get(`${this.apiUrl}/users`, { withCredentials: true } ).subscribe(
       (res: any) => {
-        this.user = res.data;
+        this._authenticatedUser.next(res.data);
         this.loadingProfile = false;
       },
       () => {
