@@ -1,6 +1,29 @@
-<div class="flex w-full items-center justify-between bg-gray-200 p-4">
+<div class="flex w-full items-center justify-between bg-gray-200 p-4 relative">
   <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
-  <app-user-profile-img [routerLink]="userProfileUrl" *ngIf="user; else elseNoUser" [user]="user"></app-user-profile-img>
+  <div (click)="toggleModal()">
+    <app-user-profile-img *ngIf="user; else elseNoUser" [user]="user"></app-user-profile-img>
+  </div>
+
+  <!-- Modal para exibir opções de ações do usuário -->
+  <div *ngIf="modalIsOpen"
+    (click)="onClickOutModal($event)"
+    class="fixed inset-0 flex justify-end bg-gray-800 bg-opacity-50 z-50">
+    <div class="bg-white w-full sm:w-[300px] p-4 flex flex-col items-end gap-5">
+      <div class="w-full flex justify-end items-center cursor-pointer">
+        <app-close-icon class="flex cursor-pointer hover:bg-gray-200 rounded-full duration-200 p-2" (click)="toggleModal()"></app-close-icon>
+      </div>
+      <div class="flex flex-col gap-4">
+        <button (click)="toggleModal()" class="flex items-center h-[50px] w-[200px] border rounded hover:bg-blue-400 duration-200" [routerLink]="userProfileUrl">
+          <app-user-icon></app-user-icon>
+          <p>Meu Perfil</p>
+        </button>
+        <button (click)="toggleModal()" class="flex items-center h-[50px] w-[200px] gap-2 border rounded hover:bg-blue-400 duration-200">
+          <app-gear-icon class="ms-3"></app-gear-icon>
+          <p>Configurações</p>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #elseNoUser>

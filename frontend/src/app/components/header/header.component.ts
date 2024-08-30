@@ -7,16 +7,20 @@ import { UserProfileService } from '../../services/user-profile.service';
 import { RegisterButtonComponent } from "../register-button/register-button.component";
 import { LoginButtonComponent } from "../login-button/login-button.component";
 import User from '../../interfaces/User';
+import { CloseIconComponent } from "../close-icon/close-icon.component";
+import { UserIconComponent } from "../user-icon/user-icon.component";
+import { GearIconComponent } from "../gear-icon/gear-icon.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent],
+  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit{
   user : User | null = null
+  modalIsOpen = true;
 
   constructor (private userProfileService: UserProfileService) {}
 
@@ -31,4 +35,13 @@ export class HeaderComponent implements OnInit{
     })
   }
 
+  toggleModal() {
+    this.modalIsOpen = !this.modalIsOpen;
+  }
+
+  onClickOutModal(event: Event){
+    if (event.target === event.currentTarget)
+      this.toggleModal();
+  }
 }
+

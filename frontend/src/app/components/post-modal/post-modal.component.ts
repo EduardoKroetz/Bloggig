@@ -18,7 +18,6 @@ export class PostModalComponent {
   @Input() toggleModal : () => void = () => {}
 
   closeModalOnClickOutside(event: MouseEvent, modalBackGround: HTMLElement) {
-    console.log(event.target, modalBackGround);
     if (event.target === modalBackGround) {
       this.toggleModal();
     }
