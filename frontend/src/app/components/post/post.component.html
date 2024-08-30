@@ -1,0 +1,21 @@
+<div class="flex flex-col border rounded w-full gap-2 p-3 mb-3 text-sm sm:text-base">
+  <div class="flex items-start gap-2">
+    <app-user-profile-img [routerLink]="authorProfileUrl"  [user]="post.author"></app-user-profile-img>
+    <div>
+      <p [routerLink]="authorProfileUrl" class="cursor-pointer hover:underline">{{ post.author.username | titlecase }}</p>
+      <p class="text-xs">{{ post.createdAt | timeAgo }}</p>
+    </div>
+  </div>
+  <div class="flex flex-col gap-3">
+    <p>{{ post.title }} </p> 
+    <p>{{ fullPostIsOpen ? post.content : shortPostContent }} <span *ngIf="!fullPostIsOpen" class="text-blue-500 cursor-pointer ms-2 p-1 px-2" (click)="showFullPostContent()">...mais</span></p>
+  </div>
+  <div *ngIf="fullPostIsOpen">
+    <span class="text-blue-500" *ngFor="let tag of post.tags">
+      #{{ tag.name }}
+    </span>
+  </div>
+  <div class="w-full flex justify-center">
+    <img *ngIf="post.thumbnailUrl" class="max-h-[400px] flex-1 rounded-2xl" [src]="post.thumbnailUrl" alt="thumbnail">
+  </div>
+</div>

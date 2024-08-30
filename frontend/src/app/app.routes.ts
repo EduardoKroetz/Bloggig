@@ -19,6 +19,7 @@ export const routes: Routes =
     path: '',
     component: MainLayoutComponent,
     children: [
+      { path: '', redirectTo: 'feed', pathMatch: 'full' },
       { path: 'feed', component: FeedComponent }
     ]
   },

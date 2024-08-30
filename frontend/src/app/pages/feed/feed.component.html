@@ -1,3 +1,7 @@
-<div>
-  feed
+<div class="w-full h-full flex justify-center">
+  <div class="feed-content m-1 sm:m-10 sm:w-[500px]">
+    <div *ngFor="let post of posts" >
+      <app-post [post]="post"></app-post>
+    </div>
+  </div>
 </div>

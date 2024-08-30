@@ -1,5 +1,11 @@
 <div class="flex w-full items-center justify-between bg-gray-200 p-4">
   <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
-  <app-user-profile-img></app-user-profile-img>
+  <app-user-profile-img *ngIf="userProfileService.user; else elseNoUser" [user]="userProfileService.user"></app-user-profile-img>
 </div>
 
+<ng-template #elseNoUser>
+  <div class="flex gap-5">
+    <app-register-button></app-register-button>
+    <app-login-button></app-login-button>
+  </div>
+</ng-template>
