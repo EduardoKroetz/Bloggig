@@ -4,10 +4,10 @@ import { EyeClosedIconComponent } from "../../../../components/eye-closed-icon/e
 import { EyeIconComponent } from "../../../../components/eye-icon/eye-icon.component";
 import { LoginService } from '../../../../services/login.service';
 import { FormsModule } from '@angular/forms';
-import { ErrorModalService } from '../../../../services/error-modal.service';
 import { Router, RouterLink } from '@angular/router';
 import { EmailInputComponent } from "../../../../components/email-input/email-input.component";
 import { PasswordInputComponent } from "../../../../components/password-input/password-input.component";
+import { AlertModalService } from '../../../../services/alert-modal.service';
 
 @Component({
   selector: 'app-login-form',
@@ -23,7 +23,7 @@ export class LoginFormComponent {
   errorEmail : string | null = null;
   errorPassword: string | null = null;
 
-  constructor (private loginService: LoginService, private errorModalService: ErrorModalService, private router: Router ) {}
+  constructor (private loginService: LoginService, private alertModalService: AlertModalService, private router: Router ) {}
 
   handleSubmit(ev: Event){
     ev.preventDefault();
@@ -53,8 +53,8 @@ export class LoginFormComponent {
         }
         else
         {
-          this.errorModalService.toggleModal();
-          this.errorModalService.modalMessage = errorMessage;
+          this.alertModalService.toggleModal();
+          this.alertModalService.modalMessage = errorMessage;
         }
 
         this.isSubmitted = false;

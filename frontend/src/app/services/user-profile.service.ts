@@ -21,6 +21,10 @@ export class UserProfileService  {
     return this.http.get(`${this.apiUrl}/users/${userId}`);
   }
 
+  updateUser(username: string, email: string) {
+    return this.http.put(`${this.apiUrl}/users`, { username, email }, { withCredentials: true })
+  }
+
   private getAuthenticatedUser() {
     this.http.get(`${this.apiUrl}/users`, { withCredentials: true } ).subscribe(
       (res: any) => {
@@ -32,4 +36,6 @@ export class UserProfileService  {
       }
     )
   }
+
+
 }

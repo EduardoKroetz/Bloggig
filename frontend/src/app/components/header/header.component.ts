@@ -20,7 +20,7 @@ import { GearIconComponent } from "../gear-icon/gear-icon.component";
 })
 export class HeaderComponent implements OnInit{
   user : User | null = null
-  modalIsOpen = true;
+  modalIsOpen = false;
 
   constructor (private userProfileService: UserProfileService) {}
 

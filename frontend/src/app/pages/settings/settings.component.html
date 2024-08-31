@@ -1,0 +1,13 @@
+<div class="w-full h-full flex flex-col sm:flex-row">
+  <div class="sm:h-full flex flex-col p-3 gap-3 border-r sm:w-[200px] border-b">
+    <button 
+      class="cursor-pointer border p-2 rounded hover:bg-gray-200 duration-200"
+      (click)="section = 'info'"
+      [ngClass]="section == 'info' ? 'bg-gray-200': ''" 
+    >Informações</button>
+    <button (click)="section = 'posts'" class="cursor-pointer border p-2 rounded hover:bg-gray-200 duration-200" [ngClass]="section == 'posts' ? 'bg-gray-200': ''">Posts</button>
+  </div>
+  <div class="w-full">
+    <app-user-settings-info *ngIf="section == 'info'"></app-user-settings-info>
+  </div>
+</div>

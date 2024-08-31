@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ErrorModalService } from '../../../../services/error-modal.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +8,7 @@ import { EmailInputComponent } from "../../../../components/email-input/email-in
 import { PasswordInputComponent } from "../../../../components/password-input/password-input.component";
 import { UsernameInputComponent } from "../../../../components/username-input/username-input.component";
 import { RegisterService } from '../../../../services/register.service';
+import { AlertModalService } from '../../../../services/alert-modal.service';
 
 @Component({
   selector: 'app-register-form',
@@ -26,7 +26,7 @@ export class RegisterFormComponent {
   errorEmail : string | null = null;
   errorPassword: string | null = null;
 
-  constructor (private registerService: RegisterService, private errorModalService: ErrorModalService, private router: Router ) {}
+  constructor (private registerService: RegisterService, private alertModalService: AlertModalService, private router: Router ) {}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -60,8 +60,8 @@ export class RegisterFormComponent {
         }
         else
         {
-          this.errorModalService.toggleModal();
-          this.errorModalService.modalMessage = errorMessage;
+          this.alertModalService.toggleModal();
+          this.alertModalService.modalMessage = errorMessage;
         }
         this.isSubmitted = false;
       }
