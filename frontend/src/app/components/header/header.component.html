@@ -1,7 +1,7 @@
 <div class="flex max-w-full items-center justify-between bg-gray-200 p-4 relative">
   <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
-  <div (click)="toggleModal()">
-    <app-user-profile-img *ngIf="user; else elseNoUser" [user]="user"></app-user-profile-img>
+  <div *ngIf="user; else elseNoUser" (click)="toggleModal()">
+    <app-user-profile-img [user]="user"></app-user-profile-img>
   </div>
 
   <!-- Modal para exibir opções de ações do usuário -->
@@ -26,6 +26,7 @@
           <app-gear-icon class="ms-3"></app-gear-icon>
           <p>Configurações</p>
         </button>
+        <app-logout-button ></app-logout-button>
       </div>
     </div>
   </div>

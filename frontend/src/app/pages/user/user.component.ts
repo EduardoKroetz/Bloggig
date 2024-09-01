@@ -7,9 +7,10 @@ import { UserIconComponent } from "../../components/user-icon/user-icon.componen
 import { UserProfileImgComponent } from "../../components/user-profile-img/user-profile-img.component";
 import Post from '../../interfaces/Post';
 import { PostService } from '../../services/post.service';
-import { error } from 'console';
 import { PostModalComponent } from "../../components/post-modal/post-modal.component";
 import { ProfilePostComponent } from "../../components/profile-post/profile-post.component";
+import { AlertModalService } from '../../services/alert-modal.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-user',
@@ -27,7 +28,7 @@ export class UserComponent implements OnInit {
   loadingUser = true;
 
   
-  constructor(private route: ActivatedRoute, private userProfileService: UserProfileService, private postService: PostService) { }
+  constructor(private route: ActivatedRoute, private userProfileService: UserProfileService, public postService: PostService, private alertModal: AlertModalService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -41,13 +42,14 @@ export class UserComponent implements OnInit {
             },
             (error) => {
               this.loadingUser = false;
+              this.alertModal.toggleModal()
+              this.alertModal.modalMessage = "Não foi possível obter os dados do usuário"
             }
           )
     
           this.postService.getUserPosts(this.id, this.postsPageSize, this.postsPageNumber).subscribe(
             (res: any) => {
               this.posts = res.data;
-              console.log(this.posts)
             }
           )
         }

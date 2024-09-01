@@ -1,4 +1,4 @@
-<div class="p-1 mt-3 gap-4 flex flex-col h-full">
+<div class="p-1 sm:p-4 gap-4 flex flex-col h-full">
   <form (submit)="handleSearchPosts($event)" class="w-full flex gap-2 sm:gap-4">
     <input type="text" autocomplete="off" placeholder="Buscar posts" class="p-2 flex-1 border rounded outline-none focus:ring-2 focus:ring-blue-500" name="input" [(ngModel)]="input">
     <button type="submit" class="p-2 rounded cursor-pointer bg-gray-200  hover:bg-gray-400 hover:text-white duration-200">
@@ -7,7 +7,7 @@
       </svg>   
     </button>
   </form>
-  <hr>
+
   <div class="flex gap-2 pb-3 flex-wrap overflow-auto">
     <div *ngFor="let post of filteredPosts">
       <app-profile-post [post]="post"></app-profile-post>

@@ -10,11 +10,12 @@ import User from '../../interfaces/User';
 import { CloseIconComponent } from "../close-icon/close-icon.component";
 import { UserIconComponent } from "../user-icon/user-icon.component";
 import { GearIconComponent } from "../gear-icon/gear-icon.component";
+import { LogoutButtonComponent } from "../logout-button/logout-button.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent],
+  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent, LogoutButtonComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -27,10 +28,10 @@ export class HeaderComponent implements OnInit{
   userProfileUrl = ""
 
   ngOnInit(): void {
-    this.userProfileService.authenticatedUser$.subscribe(user => {
-      this.user = user;
-      if (user){
-        this.userProfileUrl = `/users/${user.id}`
+    this.userProfileService.userProfile$.subscribe(data => {
+      this.user = data.user;
+      if (this.user){
+        this.userProfileUrl = `/users/${this.user.id}`
       }
     })
   }

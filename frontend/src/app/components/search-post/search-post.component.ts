@@ -24,7 +24,6 @@ export class SearchPostComponent {
   ngOnInit(): void {
     this.postService.getUserPosts(this.userId, 1000, 1).subscribe(
       (res: any) => {
-        console.log(res)
         this.posts = res.data;
         this.filteredPosts = this.posts;
         this.loadingPosts = false
@@ -42,12 +41,10 @@ export class SearchPostComponent {
   }
 
   private filterPosts() {
-    console.log(this.input)
     this.filteredPosts = this.posts?.filter(post => 
       post.content.includes(this.input) || 
       post.title.includes(this.input) || 
       post.tags.some(tag => tag.name.includes(this.input))
     )
-    console.log(this.filteredPosts)
   }
 }

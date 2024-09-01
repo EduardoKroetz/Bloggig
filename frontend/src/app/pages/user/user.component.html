@@ -4,12 +4,18 @@
     <h2>{{ user.username }}</h2>
   </div>
   <hr class="w-full">
-  <div class="flex gap-1 pb-3 justify-center flex-wrap">
+  <div  *ngIf="posts.length > 0; else elseNoPosts" class="flex gap-1 pb-3 justify-center flex-wrap">
     <div *ngFor="let post of posts">
       <app-profile-post [post]="post"></app-profile-post>
     </div>
   </div>
 </div>
+
+<ng-template #elseNoPosts>
+  <h1 class="flex text-center text-xl">
+    Nenhum post encontrado
+  </h1>
+</ng-template>
 
 
 
