@@ -4,21 +4,12 @@
     <h2>{{ user.username }}</h2>
   </div>
   <hr class="w-full">
-  <div class="flex gap-1 justify-center flex-wrap">
-    <div *ngFor="let post of posts" 
-    class="flex w-full sm:w-[240px] min-h-[240px]  hover:scale-105 duration-200 cursor-pointer"
-    (click)="activePostModal(post)">
-      <img class="sm:w-[240px] min-h-[240px] w-full rounded border" *ngIf="post.thumbnailUrl || post.thumbnailUrl == ''; else elseNoThumbanail" [src]="post.thumbnailUrl" [alt]="post.title">
-      <ng-template #elseNoThumbanail>
-        <div class="rounded flex flex-col p-3 gap-3 max-w-[250px] max-h-[250px] border">
-          <p>{{ post.title }}</p>
-          <p class="text-sm">{{ post.content.substring(0,200) }}</p>
-        </div>
-      </ng-template>
+  <div class="flex gap-1 pb-3 justify-center flex-wrap">
+    <div *ngFor="let post of posts">
+      <app-profile-post [post]="post"></app-profile-post>
     </div>
   </div>
 </div>
-<app-post-modal [post]="thePostModal" [modalIsOpen]="postModalIsOpen" [toggleModal]="togglePostModal" (click)="togglePostModal()"></app-post-modal>
 
 
 

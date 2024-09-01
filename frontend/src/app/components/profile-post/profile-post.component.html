@@ -1,0 +1,19 @@
+<div
+*ngIf="post"
+class="flex w-full sm:w-[240px] min-h-[240px]  hover:scale-105 duration-200 cursor-pointer"
+(click)="activePostModal(post)">
+  <img class="sm:w-[240px] min-h-[240px] w-full rounded border" *ngIf="post.thumbnailUrl || post.thumbnailUrl == ''; else elseNoThumbanail" [src]="post.thumbnailUrl" [alt]="post.title">
+  <ng-template #elseNoThumbanail>
+    <div class="rounded flex flex-col p-3 gap-3 max-w-[250px] max-h-[250px] border">
+      <p>{{ post.title }}</p>
+      <p class="text-sm">{{ post.content.substring(0,200) }}</p>
+    </div>
+  </ng-template>
+</div>
+<app-post-modal [post]="thePostModal" [modalIsOpen]="postModalIsOpen" [toggleModal]="togglePostModal" (click)="togglePostModal()"></app-post-modal>
+
+<div *ngIf="!post">
+  <div>
+    Não foi possível carregar o post
+  </div>
+</div>

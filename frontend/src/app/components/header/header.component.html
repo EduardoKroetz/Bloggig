@@ -1,4 +1,4 @@
-<div class="flex w-full items-center justify-between bg-gray-200 p-4 relative">
+<div class="flex max-w-full items-center justify-between bg-gray-200 p-4 relative">
   <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
   <div (click)="toggleModal()">
     <app-user-profile-img *ngIf="user; else elseNoUser" [user]="user"></app-user-profile-img>

@@ -1,4 +1,4 @@
-<div class="w-full h-full flex flex-col sm:flex-row">
+<div class="w-full h-full flex flex-col sm:flex-row" *ngIf="user">
   <div class="sm:h-full flex flex-col p-3 gap-3 border-r sm:w-[200px] border-b">
     <button 
       class="cursor-pointer border p-2 rounded hover:bg-gray-200 duration-200"
@@ -8,6 +8,10 @@
     <button (click)="section = 'posts'" class="cursor-pointer border p-2 rounded hover:bg-gray-200 duration-200" [ngClass]="section == 'posts' ? 'bg-gray-200': ''">Posts</button>
   </div>
   <div class="w-full">
-    <app-user-settings-info *ngIf="section == 'info'"></app-user-settings-info>
+    <app-user-settings-info *ngIf="section === 'info'"></app-user-settings-info>
+    <app-search-post *ngIf="section === 'posts'" [userId]="user.id"></app-search-post>
   </div>
 </div>
+
+<h1 *ngIf="!userProfileService.loadingProfile && !user" class="text-2xl text-center w-full h-full flex items-center justify-center">Não foi possível carregar as informações do usuário</h1>
+<h1 *ngIf="userProfileService.loadingProfile" class="text-2xl w-full h-full text-center flex items-center justify-center">Carregando...</h1>

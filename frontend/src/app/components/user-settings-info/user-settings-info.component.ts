@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import User from '../../interfaces/User';
 import { UserProfileService } from '../../services/user-profile.service';
 import { UserProfileImgComponent } from "../user-profile-img/user-profile-img.component";
@@ -14,20 +14,19 @@ import { AlertModalService } from '../../services/alert-modal.service';
   templateUrl: './user-settings-info.component.html',
   styleUrl: './user-settings-info.component.css'
 })
-export class UserSettingsInfoComponent implements OnInit {
-  user : User | null = null;
+export class UserSettingsInfoComponent implements OnChanges{
+  @Input() user : User | null = null;
   isEditing = false;
   username: string = ""
   email: string = ""
 
   constructor (private userProfileService: UserProfileService, private alertModalService: AlertModalService) {}
 
-  ngOnInit(): void {
-    this.userProfileService.authenticatedUser$.subscribe(user => {
-      this.user = user;
-      this.username = user?.username || "";
-      this.email = user?.email || "";
-    })
+  ngOnChanges(): void {
+    if (!this.user)
+      return
+    this.username = this.user.username || "";
+    this.email = this.user.email || "";
   }
 
   toggleEdit() {
