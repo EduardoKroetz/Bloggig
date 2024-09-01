@@ -11,11 +11,12 @@ import { CloseIconComponent } from "../close-icon/close-icon.component";
 import { UserIconComponent } from "../user-icon/user-icon.component";
 import { GearIconComponent } from "../gear-icon/gear-icon.component";
 import { LogoutButtonComponent } from "../logout-button/logout-button.component";
+import { MenuModalComponent } from "../menu-modal/menu-modal.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent, LogoutButtonComponent],
+  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent, LogoutButtonComponent, MenuModalComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -38,11 +39,6 @@ export class HeaderComponent implements OnInit{
 
   toggleModal() {
     this.modalIsOpen = !this.modalIsOpen;
-  }
-
-  onClickOutModal(event: Event){
-    if (event.target === event.currentTarget)
-      this.toggleModal();
   }
 }
 
