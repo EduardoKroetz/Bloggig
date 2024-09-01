@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EyeClosedIconComponent } from "../../../../components/eye-closed-icon/eye-closed-icon.component";
 import { EyeIconComponent } from "../../../../components/eye-icon/eye-icon.component";
-import { LoginService } from '../../../../services/login.service';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { EmailInputComponent } from "../../../../components/email-input/email-input.component";
 import { PasswordInputComponent } from "../../../../components/password-input/password-input.component";
 import { AlertModalService } from '../../../../services/alert-modal.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -23,21 +23,26 @@ export class LoginFormComponent {
   errorEmail : string | null = null;
   errorPassword: string | null = null;
 
-  constructor (private loginService: LoginService, private alertModalService: AlertModalService, private router: Router ) {}
+  constructor (private authService: AuthService, private alertModalService: AlertModalService, private router: Router ) {}
 
   handleSubmit(ev: Event){
     ev.preventDefault();
 
     this.isSubmitted = true;
-    console.log(this.email, this.password)
-    this.loginService.postLoginAsync(this.email, this.password).subscribe(
+    this.authService.login(this.email, this.password).subscribe(
       (res) => {
         this.isSubmitted = false;
         //Redirecionar
         window.location.href = "/"
       },
       (error) => {
-        console.log(error.error)
+        this.isSubmitted = false;
+        if (!error.error.message)
+        {
+          this.alertModalService.toggleModal();
+          this.alertModalService.modalMessage = "Ocorreu um erro ao tentar fazer login";
+          return
+        }
         const errorMessage = error.error.message;
         const lowerErrorMessage = errorMessage.toLowerCase();
         const isErrorEmail = lowerErrorMessage.includes("email");
@@ -56,8 +61,6 @@ export class LoginFormComponent {
           this.alertModalService.toggleModal();
           this.alertModalService.modalMessage = errorMessage;
         }
-
-        this.isSubmitted = false;
       }
     )
   }

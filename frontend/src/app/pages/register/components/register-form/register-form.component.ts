@@ -7,8 +7,8 @@ import { EyeClosedIconComponent } from "../../../../components/eye-closed-icon/e
 import { EmailInputComponent } from "../../../../components/email-input/email-input.component";
 import { PasswordInputComponent } from "../../../../components/password-input/password-input.component";
 import { UsernameInputComponent } from "../../../../components/username-input/username-input.component";
-import { RegisterService } from '../../../../services/register.service';
 import { AlertModalService } from '../../../../services/alert-modal.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-register-form',
@@ -26,7 +26,7 @@ export class RegisterFormComponent {
   errorEmail : string | null = null;
   errorPassword: string | null = null;
 
-  constructor (private registerService: RegisterService, private alertModalService: AlertModalService, private router: Router ) {}
+  constructor (private authService: AuthService, private alertModalService: AlertModalService, private router: Router ) {}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -37,14 +37,20 @@ export class RegisterFormComponent {
 
     this.isSubmitted = true;
 
-    this.registerService.registerUser(this.username ,this.email, this.password).subscribe(
+    this.authService.registerUser(this.username ,this.email, this.password).subscribe(
       (res) => {
         this.isSubmitted = false;
         //Redirecionar
         this.router.navigate(['/']);
       },
       (error) => {
-        console.log(error);
+        this.isSubmitted = false;
+        if (!error.error.message)
+        {
+          this.alertModalService.toggleModal();
+          this.alertModalService.modalMessage = "Ocorreu um erro ao tentar registrar o usuário";
+          return
+        }
         const errorMessage = error.error.message;
         const lowerErrorMessage = errorMessage.toLowerCase();
         const isErrorEmail = lowerErrorMessage.includes("email");
@@ -63,7 +69,6 @@ export class RegisterFormComponent {
           this.alertModalService.toggleModal();
           this.alertModalService.modalMessage = errorMessage;
         }
-        this.isSubmitted = false;
       }
     )
   }
