@@ -1,4 +1,6 @@
 ﻿using Bloggig.Application.DTOs.Posts;
+using Bloggig.Application.DTOs.Tags;
+using Bloggig.Application.DTOs.Users;
 using Bloggig.Application.Services.Interfaces;
 using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
@@ -59,13 +61,22 @@ public class PostService : IPostService
 
         var posts = await _postRepository.GetByReferencesAsync(keys);
 
-        return posts.Select(x => new GetPostDto
+        return posts.Select(p => new GetPostDto
         {
-            Id = x.Id,
-            AuthorId = x.AuthorId,
-            Content = x.Content,
-            ThumbnailUrl = x.ThumbnailUrl,
-            Title = x.Title
+            Id = p.Id,
+            Content = p.Content,
+            ThumbnailUrl = p.ThumbnailUrl,
+            Title = p.Title,
+            AuthorId = p.AuthorId,
+            CreatedAt = p.CreatedAt,
+            Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
+            Author = new GetUserDto
+            {
+                Id = p.Author.Id,
+                Username = p.Author.Username,
+                Email = p.Author.Email,
+                ProfileImageUrl = p.Author.ProfileImageUrl
+            }
         }).ToList();
     }
 
@@ -107,4 +118,47 @@ public class PostService : IPostService
         await _postRepository.UpdateAsync(post);
     }
 
+    public async Task<List<GetPostDto>> GetPostsAsync(int pageSize, int pageNumber)
+    {
+        var posts = await _postRepository.GetPostsAsync(pageSize, pageNumber);
+        return posts.Select(p => new GetPostDto
+        {
+            Id = p.Id,
+            Content = p.Content,
+            ThumbnailUrl = p.ThumbnailUrl,
+            Title = p.Title,
+            AuthorId = p.AuthorId,
+            CreatedAt = p.CreatedAt,
+            Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
+            Author = new GetUserDto 
+            { 
+                Id = p.Author.Id, 
+                Username = p.Author.Username, 
+                Email = p.Author.Email, 
+                ProfileImageUrl = p.Author.ProfileImageUrl 
+            }
+        }).ToList();
+    }
+
+    public async Task<List<GetPostDto>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
+    {
+        var posts = await _postRepository.GetUserPostsAsync(userId ,pageSize, pageNumber);
+        return posts.Select(p => new GetPostDto
+        {
+            Id = p.Id,
+            Content = p.Content,
+            ThumbnailUrl = p.ThumbnailUrl,
+            Title = p.Title,
+            AuthorId = p.AuthorId,
+            CreatedAt = p.CreatedAt,
+            Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
+            Author = new GetUserDto
+            {
+                Id = p.Author.Id,
+                Username = p.Author.Username,
+                Email = p.Author.Email,
+                ProfileImageUrl = p.Author.ProfileImageUrl
+            }
+        }).ToList();
+    }
 }

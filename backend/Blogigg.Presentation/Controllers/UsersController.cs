@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Bloggig.Presentation.Utils;
 
 namespace Bloggig.Presentation.Controllers;
 
@@ -32,7 +30,29 @@ public class UsersController : Controller
         var user = await _userService.GetUserByIdAsync(userId);
         if (user == null) 
         {
-            return NotFound("Usuário não encontrado");
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
+        }
+
+        //Criar o dto para retorno dos dados
+        var dto = new GetUserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Username = user.Username,
+            ProfileImageUrl = user.ProfileImageUrl,
+        };
+
+        return Ok(ResultDto.SuccessResult(dto, "Sucesso!"));
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserAsync([FromRoute] Guid userId)
+    {
+        //Buscar o usuário pelo id 
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
         }
 
         //Criar o dto para retorno dos dados
@@ -58,7 +78,12 @@ public class UsersController : Controller
         var user = await _userService.GetUserByIdAsync(userId);
         if (user == null)
         {
-            return NotFound("Usuário não encontrado");
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
+        }
+
+        if (user.IsOAuthUser && user.Email != updateUserDto.Email)
+        {
+            return BadRequest(ResultDto.BadResult("Usuários vinculados com conta google não podem alterar o email"));
         }
 
         user.UpdateEmail(updateUserDto.Email);
@@ -79,7 +104,7 @@ public class UsersController : Controller
         var user = await _userService.GetUserByIdAsync(userId);
         if (user == null)
         {
-            return NotFound("Usuário não encontrado");
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
         }
 
         //Deletar o usuário do banco de dados

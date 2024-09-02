@@ -22,7 +22,8 @@ public class BloggigDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(x => x.Email).IsUnique();
 
-        modelBuilder.Entity<Post>();
+        modelBuilder.Entity<Post>()
+            .HasOne(x => x.Author);
         modelBuilder.Entity<Comment>()
             .HasOne(x => x.Author);
 

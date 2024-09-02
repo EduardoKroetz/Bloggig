@@ -23,6 +23,14 @@ public class PostsController : ControllerBase
         _tagService = tagService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetPostAsync([FromQuery] int pageSize = 15, [FromQuery] int pageNumber = 1)
+    {
+        var posts = await _postService.GetPostsAsync(pageSize, pageNumber);
+        return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
+    }
+
+
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreatePostAsync([FromBody] EditorPostDto editorPostDto)
@@ -117,6 +125,14 @@ public class PostsController : ControllerBase
         await _postService.DeletePostAsync(post);
 
         return Ok(ResultDto.SuccessResult(new { post.Id }, "Post deletado com sucesso!"));
+    }
+
+    [HttpGet("users/{userId:guid}")]
+    public async Task<IActionResult> GetUserPostsAsync([FromRoute] Guid userId, [FromQuery] int pageSize, [FromQuery] int pageNumber )
+    {
+        //Buscar os posts do usuário
+        var posts = await _postService.GetUserPostsAsync(userId, pageSize, pageNumber);
+        return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
     }
 }
     

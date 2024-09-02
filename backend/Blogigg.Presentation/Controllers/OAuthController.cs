@@ -76,11 +76,10 @@ public class OAuthController : Controller
                 ProfileImageUrl = userInfo.Picture,  
             };
 
-            await _userService.AddUserAsync(createUserDto);
+            userExists = await _userService.AddUserAsync(createUserDto);
         }else
         {
             //Atualiza o usuário existente
-            userExists.UpdateUsername(userInfo.Name);
             userExists.UpdateEmail(userInfo.Email);
             userExists.UpdateProfileImage(userInfo.Picture);
 

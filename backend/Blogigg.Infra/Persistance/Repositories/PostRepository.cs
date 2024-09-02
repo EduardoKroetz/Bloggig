@@ -28,6 +28,7 @@ public class PostRepository : IPostRepository
     {
         var reference = string.Join(" ", keyWords);
         return await _context.Posts
+            .Include(p => p.Author)
             .Where(p => 
                 p.Tags.Any(tag => 
                     keyWords.Contains(tag.Name)) || 
@@ -40,5 +41,28 @@ public class PostRepository : IPostRepository
     {
         _context.Update(post);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Post>> GetPostsAsync(int pageSize, int pageNumber)
+    {
+        return await _context.Posts
+            .Include(p => p.Author)
+            .Include(p => p.Tags)
+            .Skip(( pageNumber - 1 ) * pageSize)
+            .Take(pageSize)
+            .Where(x => x.Status != "deleted")
+            .ToListAsync();
+    }
+
+    public async Task<List<Post>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
+    {
+        return await _context.Posts
+            .Where(p => p.AuthorId == userId && p.Status != "deleted")
+            .Include(p => p.Author)
+            .Include(p => p.Tags)
+            .Skip(( pageNumber - 1 ) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
     }
 }

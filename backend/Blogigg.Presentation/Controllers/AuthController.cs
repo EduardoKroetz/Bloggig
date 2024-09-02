@@ -4,6 +4,9 @@ using IAuthenticationService = Bloggig.Application.Services.Interfaces.IAuthenti
 using Bloggig.Presentation.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Bloggig.Application.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bloggig.Presentation.Controllers;
 
@@ -18,6 +21,16 @@ public class AuthController : Controller
     {
         _userService = userService;
         _authenticationService = authenticationService;
+    }
+
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return Ok(ResultDto.SuccessResult(new { }, "Logout realizado com sucesso!"));
     }
 
     [HttpPost("register")]

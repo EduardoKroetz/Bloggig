@@ -26,7 +26,7 @@ public class UserService : IUserService
         return await _userRepository.GetUserByIdAsync(id);
     }
 
-    public async Task AddUserAsync(CreateOAuthUserDto dto)
+    public async Task<User> AddUserAsync(CreateOAuthUserDto dto)
     {
         var user = new User
         (
@@ -40,6 +40,8 @@ public class UserService : IUserService
         );
 
         await _userRepository.AddAsync(user);
+
+        return user;
     }
 
     public async Task UpdateUserAsync(User user)
