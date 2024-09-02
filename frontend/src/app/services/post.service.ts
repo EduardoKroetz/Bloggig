@@ -21,4 +21,8 @@ export class PostService {
   createPostAsync(title: string, content: string, base64Thumbnail: string, tags: string[]){
     return this.http.post(`${environment.apiUrl}/posts`,{ title, content, base64Thumbnail, tags }, { withCredentials: true });
   }
+
+  deletePostAsync(postId: string) {
+    return this.http.delete(`${environment.apiUrl}/posts/${postId}`,{ withCredentials: true });
+  }
 }

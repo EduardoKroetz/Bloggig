@@ -77,6 +77,9 @@ export class NewPostComponent implements OnInit {
       (res) => {
         this.alertService.toggleModal();
         this.alertService.modalMessage = "Post criado com sucesso!"
+        setTimeout(() => {
+          window.location.href = '/feed'
+        }, 1000)
       },
       (error) => {
         var errorMessage : string = error.error.message;

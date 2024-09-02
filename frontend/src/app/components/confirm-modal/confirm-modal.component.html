@@ -1,0 +1,22 @@
+<div class="relative">
+  <div 
+    *ngIf="confirmModal.modalIsOpen" 
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    (click)="closeModalOnClickOutside($event)"
+    >
+    <div class="bg-white p-6 flex flex-col items-center rounded shadow-md max-w-sm w-full m-5">
+      <div class="text-center">
+        {{ confirmModal.modalMessage }}
+      </div>
+      <div class="mt-4 flex gap-3">
+        <button (click)="confirmModal.toggleModal()" class="bg-red-500 text-white py-2 px-4 rounded">
+          Cancelar
+        </button>
+        <button (click)="onConfirm()" class="bg-blue-500 text-white py-2 px-4 rounded">
+          Confirmar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

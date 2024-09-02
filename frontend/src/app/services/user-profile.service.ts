@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import User from '../interfaces/User';
 import { BehaviorSubject, catchError, map, of } from 'rxjs';
 import { AlertModalService } from './alert-modal.service';
-import { error, profile } from 'console';
 
 @Injectable({
   providedIn: 'root'
