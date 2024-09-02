@@ -9,6 +9,11 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
+  getPostsAsync(pageSize: number, pageNumber: number)
+  {
+    return this.http.get(`${environment.apiUrl}/posts?pageSize=${pageSize}&pageNumber=${pageNumber}`)
+  }
+
   getUserPosts(userId: string, pageSize: number, pageNumber: number){
     return this.http.get(`${environment.apiUrl}/posts/users/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`);
   }

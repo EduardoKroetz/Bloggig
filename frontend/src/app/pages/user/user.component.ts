@@ -23,7 +23,7 @@ export class UserComponent implements OnInit {
   user : User | null = null; 
   id : string | null = "";
   posts: Post[] = []
-  postsPageSize = 20;
+  postsPageSize = 25;
   postsPageNumber = 1;
   loadingUser = true;
 

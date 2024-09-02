@@ -24,8 +24,9 @@ export const routes: Routes =
       { path: '', redirectTo: 'feed', pathMatch: 'full' },
       { path: 'feed', component: FeedComponent },
       { path: 'users/:id', component: UserComponent },
-      { path: 'user/settings', component: SettingsComponent }
-    ]
+      { path: 'user/settings', component: SettingsComponent },
+      /* { path: 'posts/new-post', component: NewPostComponent } */
+    ] 
   },
   {
     path: '**', redirectTo: 'feed', pathMatch: "full"

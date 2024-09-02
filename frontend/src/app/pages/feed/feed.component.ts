@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PostComponent } from "../../components/post/post.component";
 import { CommonModule } from '@angular/common';
 import Post from '../../interfaces/Post';
-import { FeedService } from '../../services/feed.service';
-import { error } from 'console';
 import { AlertModalService } from '../../services/alert-modal.service';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-feed',
@@ -19,16 +18,17 @@ export class FeedComponent implements OnInit {
   pageNumber = 1;
   loadingPosts = true;
 
-  constructor (private feedService: FeedService, private alertModal: AlertModalService) {}
+  constructor (private postService: PostService, private alertModal: AlertModalService) {}
 
   ngOnInit(): void {
     this.getPosts();
   }
 
   getPosts(){
-    this.feedService.getPostsAsync(this.pageSize, this.pageNumber).subscribe(
+    this.postService.getPostsAsync(this.pageSize, this.pageNumber).subscribe(
       (res : any) => {
-        this.posts = res.data;
+        console.log(res.data)
+        this.posts = [...this.posts, ...res.data]
         this.loadingPosts = false;
       },
       (error) => {
@@ -36,5 +36,10 @@ export class FeedComponent implements OnInit {
         this.alertModal.modalMessage = "Não foi possível obter os dados do servidor"
       }
     )
+  }
+
+  loadMorePosts(){
+    this.pageNumber++;
+    this.getPosts();
   }
 }
