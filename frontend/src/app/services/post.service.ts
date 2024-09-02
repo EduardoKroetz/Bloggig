@@ -17,4 +17,8 @@ export class PostService {
   getUserPosts(userId: string, pageSize: number, pageNumber: number){
     return this.http.get(`${environment.apiUrl}/posts/users/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`);
   }
+
+  createPostAsync(title: string, content: string, base64Thumbnail: string, tags: string[]){
+    return this.http.post(`${environment.apiUrl}/posts`,{ title, content, base64Thumbnail, tags }, { withCredentials: true });
+  }
 }

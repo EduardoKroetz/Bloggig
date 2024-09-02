@@ -1,10 +1,10 @@
 <div
 *ngIf="post"
-class="flex w-full sm:w-[240px] min-h-[240px]  hover:scale-105 duration-200 cursor-pointer"
+class="flex w-full sm:w-[240px] h-[240px]  hover:scale-105 duration-200 cursor-pointer"
 (click)="activePostModal(post)">
-  <img class="sm:w-[240px] min-h-[240px] w-full rounded border" *ngIf="post.thumbnailUrl || post.thumbnailUrl == ''; else elseNoThumbanail" [src]="post.thumbnailUrl" [alt]="post.title">
+  <img class="object-cover w-full rounded border" *ngIf="post.thumbnailUrl || post.thumbnailUrl == ''; else elseNoThumbanail" [src]="post.thumbnailUrl" [alt]="post.title">
   <ng-template #elseNoThumbanail>
-    <div class="rounded flex flex-col p-3 gap-3 max-w-[250px] max-h-[250px] border">
+    <div class="rounded flex flex-col p-3 gap-3 w-[240px] h-[240px] border">
       <p>{{ post.title }}</p>
       <p class="text-sm">{{ post.content.substring(0,200) }}</p>
     </div>

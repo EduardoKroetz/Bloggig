@@ -16,7 +16,7 @@
       #{{ tag.name }}
     </span>
   </div>
-  <div class="w-full flex justify-center">
-    <img *ngIf="post.thumbnailUrl" class="max-h-[350px] max-w-[400px] flex-1 rounded-2xl" [src]="post.thumbnailUrl" alt="thumbnail">
+  <div class="flex justify-center max-h-[330px] max-w-[500px] rounded-2xl">
+    <img *ngIf="post.thumbnailUrl" class="object-cover object-center flex-1 rounded-2xl" [src]="post.thumbnailUrl" alt="thumbnail">
   </div>
 </div>

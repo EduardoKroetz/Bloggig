@@ -6,6 +6,7 @@ import { FeedComponent } from './pages/feed/feed.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { UserComponent } from './pages/user/user.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { NewPostComponent } from './pages/new-post/new-post.component';
 
 export const routes: Routes = 
 [
@@ -25,7 +26,7 @@ export const routes: Routes =
       { path: 'feed', component: FeedComponent },
       { path: 'users/:id', component: UserComponent },
       { path: 'user/settings', component: SettingsComponent },
-      /* { path: 'posts/new-post', component: NewPostComponent } */
+      { path: 'posts/new-post', component: NewPostComponent } 
     ] 
   },
   {
