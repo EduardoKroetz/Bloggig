@@ -1,4 +1,5 @@
 ﻿using Bloggig.Application.DTOs;
+using Bloggig.Application.DTOs.Users;
 using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
 using Bloggig.Infra.Services.Interfaces;
@@ -80,5 +81,22 @@ public class UserService : IUserService
     public async Task DeleteUserAsync(User user)
     {
         await _userRepository.DeleteAsync(user);
+    }
+
+    public async Task<IEnumerable<GetUserDto>> GetUsersByName(string name, int pageSize, int pageNumber)
+    {
+        //Vai separar o nome por espaços em branco para então filtrar
+        //por mais de 3 caracteres
+        var names = name.ToLower().Split(" ").ToList();
+
+        var users = await _userRepository.GetByNamesAsync(names, pageSize, pageNumber);
+
+        return users.Select(u => new GetUserDto
+        {
+            Id = u.Id,
+            Email = u.Email,
+            Username = u.Username,
+            ProfileImageUrl = u.ProfileImageUrl
+        }).ToList();
     }
 }

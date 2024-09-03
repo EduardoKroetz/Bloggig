@@ -1,5 +1,6 @@
 ﻿using Bloggig.Application.DTOs;
 using Bloggig.Application.DTOs.Posts;
+using Bloggig.Application.DTOs.Tags;
 using Bloggig.Application.Services;
 using Bloggig.Application.Services.Interfaces;
 using Bloggig.Presentation.Extensions;
@@ -23,8 +24,37 @@ public class PostsController : ControllerBase
         _tagService = tagService;
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetPostAsync([FromRoute] Guid id)
+    {
+        var post = await _postService.GetPostById(id);
+        if (post == null) 
+        {
+            return NotFound(ResultDto.BadResult("Post não encontrado"));
+        }
+
+        var dto = new GetPostDto
+        {
+            Id = post.Id,
+            AuthorId = post.Id,
+            Author = null,
+            Content = post.Content,
+            CreatedAt = post.CreatedAt,
+            ThumbnailUrl = post.ThumbnailUrl,
+            Title = post.Title,
+            Tags = post.Tags
+                .Select(t => new GetTag 
+                { 
+                    Id = t.Id, 
+                    Name = t.Name 
+                }).ToList()
+        };
+
+        return Ok(ResultDto.SuccessResult(dto, "Sucesso!"));
+    }
+
     [HttpGet]
-    public async Task<IActionResult> GetPostAsync([FromQuery] int pageSize = 15, [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetPostsAsync([FromQuery] int pageSize = 15, [FromQuery] int pageNumber = 1)
     {
         var posts = await _postService.GetPostsAsync(pageSize, pageNumber);
         return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
@@ -58,9 +88,9 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> SearchPostAsync([FromQuery] string reference)
+    public async Task<IActionResult> SearchPostAsync([FromQuery] string reference, [FromQuery] int pageSize, [FromQuery] int pageNumber)
     {
-        var posts = await _postService.GetPostsByReference(reference);
+        var posts = await _postService.GetPostsByReference(reference, pageSize, pageNumber);
         return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
     }
 

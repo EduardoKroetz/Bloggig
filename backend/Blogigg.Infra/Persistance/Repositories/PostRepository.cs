@@ -24,16 +24,23 @@ public class PostRepository : IPostRepository
         return await _context.Posts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == id);   
     }
 
-    public async Task<IEnumerable<Post>> GetByReferencesAsync(List<string> keyWords)
+    public async Task<IEnumerable<Post>> GetByReferencesAsync(List<string> keyWords, int pageSize, int pageNumber)
     {
-        var reference = string.Join(" ", keyWords);
         return await _context.Posts
+            .AsNoTracking()
             .Include(p => p.Author)
             .Where(p => 
-                p.Tags.Any(tag => 
-                    keyWords.Contains(tag.Name)) || 
-                p.Title.Contains(reference))
+                keyWords.Any(keyWord => p.Tags.Any(
+                    tag => tag.Name.ToLower().Contains(keyWord))) || 
+                keyWords.Any(keyWord => 
+                    p.Title.ToLower().Contains(keyWord))
+            )
             .Where(p => p.Status != "deleted")
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .OrderByDescending(p => 
+                keyWords.Where(keyWord => p.Title.ToLower().Contains(keyWord))
+                .Max(keyWord => keyWord.Length))
             .ToListAsync();
     }
 
@@ -46,6 +53,7 @@ public class PostRepository : IPostRepository
     public async Task<List<Post>> GetPostsAsync(int pageSize, int pageNumber)
     {
         return await _context.Posts
+            .AsNoTracking()
             .Include(p => p.Author)
             .Include(p => p.Tags)
             .Skip(( pageNumber - 1 ) * pageSize)
@@ -57,6 +65,7 @@ public class PostRepository : IPostRepository
     public async Task<List<Post>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
     {
         return await _context.Posts
+            .AsNoTracking()
             .Where(p => p.AuthorId == userId && p.Status != "deleted")
             .Include(p => p.Author)
             .Include(p => p.Tags)

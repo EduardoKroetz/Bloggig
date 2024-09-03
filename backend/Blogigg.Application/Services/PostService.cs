@@ -53,13 +53,13 @@ public class PostService : IPostService
         return await _postRepository.GetById(postId);
     }
 
-    public async Task<IEnumerable<GetPostDto>> GetPostsByReference(string reference)
+    public async Task<IEnumerable<GetPostDto>> GetPostsByReference(string reference, int pageSize, int pageNumber)
     {
         //Vai separar as palavras por espaços em branco para então filtrar
         //as palavras com mais de 3 caracteres
-        var keys = reference.Split(" ").Where(x => x.Length > 3).ToList();
+        var keys = reference.ToLower().Split(" ").Where(x => x.Length > 2).ToList();
 
-        var posts = await _postRepository.GetByReferencesAsync(keys);
+        var posts = await _postRepository.GetByReferencesAsync(keys,pageSize, pageNumber);
 
         return posts.Select(p => new GetPostDto
         {

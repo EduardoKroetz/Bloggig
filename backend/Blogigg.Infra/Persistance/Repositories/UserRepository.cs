@@ -19,6 +19,19 @@ public class UserRepository : IUserRepository
         return await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
     }
 
+    public async Task<IEnumerable<User>> GetByNamesAsync(List<string> names, int pageSize ,int pageNumber)
+    {
+        return await _context.Users
+            .AsNoTracking()
+            .Where(p => names.Any(name => p.Username.ToLower().Contains(name)))
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .OrderByDescending(p => names
+                .Where(name => name.Contains(p.Username.ToLower()))
+                .Max(name => name.Length))
+            .ToListAsync();
+    }
+
     public async Task AddAsync(User user)
     {
         await _context.Users.AddAsync(user);

@@ -15,8 +15,9 @@ public class TagService : ITagService
 
     public async Task<List<Tag>> CreateTagsIfNotExistsAsync(string[] names)
     {
+        var tagsWithOutHashtag = names.Select(x => x.Replace("#", string.Empty)).ToList();
         var tags = new List<Tag>();
-        foreach (var name in names)
+        foreach (var name in tagsWithOutHashtag)
         {
             var tag = await _tagRepository.GetTagByName(name);
             if (tag != null)

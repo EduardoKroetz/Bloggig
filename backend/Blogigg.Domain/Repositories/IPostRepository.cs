@@ -5,7 +5,7 @@ namespace Bloggig.Domain.Repositories;
 public interface IPostRepository
 {
     Task AddAsync(Post post);
-    Task<IEnumerable<Post>> GetByReferencesAsync(List<string> references);
+    Task<IEnumerable<Post>> GetByReferencesAsync(List<string> references, int pageSize, int pageNumber);
     Task<Post?> GetById(Guid id);
     Task UpdateAsync(Post post);
     Task<List<Post>> GetPostsAsync(int pageSize, int pageNumber);

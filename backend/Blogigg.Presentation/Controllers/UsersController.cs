@@ -17,7 +17,18 @@ public class UsersController : Controller
     public UsersController(IUserService userService)
     {
         _userService = userService;
-    } 
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUserAsync([FromQuery] string name, [FromQuery] int pageSize, [FromQuery] int pageNumber)
+    {
+        if (name == null)
+        {
+            return BadRequest(ResultDto.BadResult("Informe o nome pelo qual deseja procurar"));
+        }
+        var users = await _userService.GetUsersByName(name, pageSize, pageNumber);
+        return Ok(ResultDto.SuccessResult(users, "Sucesso!"));
+    }
 
     [HttpGet]
     [Authorize]
