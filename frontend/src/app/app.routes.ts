@@ -8,6 +8,7 @@ import { UserComponent } from './pages/user/user.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { NewPostComponent } from './pages/new-post/new-post.component';
 import { EditPostComponent } from './pages/edit-post/edit-post.component';
+import { SearchComponent } from './pages/search/search.component';
 
 export const routes: Routes = 
 [
@@ -28,7 +29,8 @@ export const routes: Routes =
       { path: 'users/:id', component: UserComponent },
       { path: 'user/settings', component: SettingsComponent },
       { path: 'posts/new-post', component: NewPostComponent },
-      { path: 'posts/edit-post/:id', component: EditPostComponent }
+      { path: 'posts/edit-post/:id', component: EditPostComponent },
+      { path: 'search', component: SearchComponent }
     ] 
   },
   {

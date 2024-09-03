@@ -1,7 +1,10 @@
-<div class="flex max-w-full items-center justify-between bg-gray-200 p-4 relative">
+<div class="flex max-w-full items-center justify-between bg-gray-200 gap-1 p-4 relative">
   <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
-  <div *ngIf="user; else elseNoUser" (click)="toggleModal()">
-    <app-user-profile-img [user]="user"></app-user-profile-img>
+  <div class="flex justify-end gap-1 sm:gap-4 w-full">
+    <app-search-form class="flex-1 flex justify-end"></app-search-form>
+    <div *ngIf="user; else elseNoUser" (click)="toggleModal()">
+      <app-user-profile-img [user]="user"></app-user-profile-img>
+    </div>
   </div>
 
   <!-- Modal para exibir opções de ações do usuário -->

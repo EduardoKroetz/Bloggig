@@ -34,4 +34,8 @@ export class PostService {
   updatePostAsync(postId: string, title: string, content: string, base64Thumbnail: string, tags: string[]){
     return this.http.put(`${environment.apiUrl}/posts/${postId}`,{ title, content, base64Thumbnail, tags }, { withCredentials: true });
   }
+
+  searchPostsAsync(reference: string, pageSize: number, pageNumber: number) {
+    return this.http.get(`${environment.apiUrl}/posts/search?reference=${reference}&pageSize=${pageSize}&pageNumber=${pageNumber}`)
+  }
 }

@@ -38,4 +38,8 @@ export class UserProfileService {
       )
       .subscribe(profile => this._userProfile.next(profile))
   };
+
+  searchUsersAsync(reference: string, pageSize: number, pageNumber: number) {
+    return this.http.get(`${environment.apiUrl}/users/search?name=${reference}&pageSize=${pageSize}&pageNumber=${pageNumber}`)
+  }
 }

@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { CloseIconComponent } from "../close-icon/close-icon.component";
 import { CommonModule } from '@angular/common';
-import Post from '../../interfaces/Post';
 import { FormsModule } from '@angular/forms';
 import { PostComponent } from "../post/post.component";
+import { PostModalService } from '../../services/post-modal.service';
 
 @Component({
   selector: 'app-post-modal',
@@ -13,13 +13,11 @@ import { PostComponent } from "../post/post.component";
   styleUrl: './post-modal.component.css'
 })
 export class PostModalComponent {
-  @Input() post : Post = null!;
-  @Input() modalIsOpen = false;
-  @Input() toggleModal : () => void = () => {}
+  constructor (public postModalService: PostModalService) {}
 
   closeModalOnClickOutside(event: MouseEvent, modalBackGround: HTMLElement) {
     if (event.target === modalBackGround) {
-      this.toggleModal();
+      this.postModalService.closeModal();
     }
   }
 
