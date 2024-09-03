@@ -5,11 +5,12 @@ import { SearchPostComponent } from "../../components/search-post/search-post.co
 import Post from '../../interfaces/Post';
 import User from '../../interfaces/User';
 import { UserProfileService } from '../../services/user-profile.service';
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, UserSettingsInfoComponent, SearchPostComponent],
+  imports: [CommonModule, UserSettingsInfoComponent, SearchPostComponent, LoadingComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })

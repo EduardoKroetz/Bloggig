@@ -65,7 +65,7 @@ export class EditPostComponent implements OnInit {
         var errorMessage : string = error.error?.message;
         if (!errorMessage){
           this.alertService.toggleModal();
-          this.alertService.modalMessage = "Ocorreu um erro ao criar o post"
+          this.alertService.modalMessage = "Ocorreu um erro ao atualizar o post"
         }
 
         if (errorMessage.includes("título")) {

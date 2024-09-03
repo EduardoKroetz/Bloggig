@@ -1,7 +1,5 @@
 <!-- Mensagem de Carregamento -->
-<div *ngIf="loadingUser" class="text-2xl w-full h-full text-center flex items-center justify-center">
-  Carregando...
-</div>
+<app-loading *ngIf="loadingUser"></app-loading>
 
 <!-- Se o carregamento terminou e há um usuário, exibe a seção do usuário -->
 <div *ngIf="user" class="w-full h-full flex flex-col sm:flex-row">

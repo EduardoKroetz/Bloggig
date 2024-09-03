@@ -11,11 +11,12 @@ import { PostModalComponent } from "../../components/post-modal/post-modal.compo
 import { ProfilePostComponent } from "../../components/profile-post/profile-post.component";
 import { AlertModalService } from '../../services/alert-modal.service';
 import { error } from 'console';
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, UserIconComponent, UserProfileImgComponent, PostModalComponent, ProfilePostComponent],
+  imports: [CommonModule, UserIconComponent, UserProfileImgComponent, PostModalComponent, ProfilePostComponent, LoadingComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

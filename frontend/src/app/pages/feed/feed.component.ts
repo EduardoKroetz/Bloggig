@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import Post from '../../interfaces/Post';
 import { AlertModalService } from '../../services/alert-modal.service';
 import { PostService } from '../../services/post.service';
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [PostComponent, CommonModule],
+  imports: [PostComponent, CommonModule, LoadingComponent],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.css'
 })
@@ -32,8 +33,9 @@ export class FeedComponent implements OnInit {
         this.loadingPosts = false;
       },
       (error) => {
-        this.alertModal.toggleModal();
+        this.alertModal.showModal();
         this.alertModal.modalMessage = "Não foi possível obter os dados do servidor"
+        this.loadingPosts = false;
       }
     )
   }

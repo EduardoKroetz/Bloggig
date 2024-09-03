@@ -1,3 +1,5 @@
+<app-loading [loading]="loadingUser"></app-loading>
+
 <div *ngIf="user" class="bg-gray flex flex-col items-center sm:m-10 rounded p-2 gap-4">
   <div class="flex flex-col items-center items-start">
     <app-user-profile-img [user]="user"></app-user-profile-img>
