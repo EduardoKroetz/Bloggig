@@ -1,84 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PostService } from '../../services/post.service';
-import { error } from 'console';
 import { AlertModalService } from '../../services/alert-modal.service';
+import { IPostForm, IPostFormError, PostFormComponent } from "../../components/post-form/post-form.component";
 
 @Component({
   selector: 'app-new-post',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PostFormComponent],
   templateUrl: './new-post.component.html',
-  styleUrls: ['./new-post.component.css'] // Corrigido para styleUrls
+  styleUrls: ['./new-post.component.css']
 })
-export class NewPostComponent implements OnInit {
-  tagsArr: string[] = [];
+export class NewPostComponent{
   thumbnailBase64 = "";
-  postForm : FormGroup;
+  postForm : IPostForm = { title: "", content: "", tags: "", thumbnail: null, thumbnailBase64: "", thumbnailLink: null };
+  postFormError : IPostFormError = {errorContent: null, errorThumbnail: null, errorTitle: null };
 
-  errorTitle: string | null = null;
-  errorContent: string | null = null;
-  errorThumbnail: string | null = null;
+  constructor (private postService: PostService, private alertService: AlertModalService) {}
 
-  constructor (private fb: FormBuilder, private postService: PostService, private alertService: AlertModalService) {
-    this.postForm = this.fb.group({
-      title: [''],
-      content: [''],
-      tags: [''],
-      thumbnail: [null]
-    })
-  }
+  handleSubmit(){
+    const tags = this.postForm.tags.replace('#', '').split(" ");
 
-  ngOnInit(): void {
-    this.postForm.get('thumbnail')?.valueChanges.subscribe((file: File) => {
-      this.errorThumbnail = null;
-      this.thumbnailBase64 = "";
-      const maxSizeInMB = 1;
-
-      if (file) {
-        const fileSizeInMB = file.size / 1024 / 1024;
-        if (fileSizeInMB > maxSizeInMB) {
-          this.errorThumbnail = 'O arquivo é muito grande! Por favor, selecione uma imagem menor que ' + maxSizeInMB + 'MB.';
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-          this.thumbnailBase64 = (e.target as FileReader).result?.toString().split(',')[1] || '';
-        };
-        reader.readAsDataURL(file);
-      }
-    })
-  }
-
-  onFileChange(event: any): void {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.postForm.patchValue({
-        thumbnail: file
-      });
-    }
-  }
-
-  handleSubmit(event: SubmitEvent){
-    event.preventDefault();
-
-    this.errorContent = null;
-    this.errorThumbnail = null;
-    this.errorTitle = null
-
-    const title : string = this.postForm.get('title')?.value;
-    const content : string = this.postForm.get('content')?.value
-    const tagsStr : string = this.postForm.get('tags')?.value
-    const tags = tagsStr.replace('#', '').split(" ");
-
-    this.postService.createPostAsync(title, content, this.thumbnailBase64, tags).subscribe(
+    this.postService.createPostAsync(this.postForm.title, this.postForm.content, this.postForm.thumbnailBase64, tags).subscribe(
       (res) => {
         this.alertService.toggleModal();
         this.alertService.modalMessage = "Post criado com sucesso!"
         setTimeout(() => {
-          window.location.href = '/feed'
+          window.location.href = "/feed"
         }, 1000)
       },
       (error) => {
@@ -89,9 +38,9 @@ export class NewPostComponent implements OnInit {
         }
 
         if (errorMessage.includes("título")) {
-          this.errorTitle = errorMessage;
+          this.postFormError.errorTitle = errorMessage;
         }else if (errorMessage.includes("conteúdo")) {
-          this.errorContent = errorMessage;
+          this.postFormError.errorContent = errorMessage;
         }else {
           this.alertService.toggleModal();
           this.alertService.modalMessage = errorMessage

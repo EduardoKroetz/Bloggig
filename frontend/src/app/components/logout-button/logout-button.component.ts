@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { error } from 'console';
 import { AlertModalService } from '../../services/alert-modal.service';
 
 @Component({
@@ -21,7 +19,7 @@ export class LogoutButtonComponent {
         window.location.href = "/auth/login"
       },
       (error) => {
-        this.alertService.modalIsOpen = true;
+        this.alertService.showModal();
         this.alertService.modalMessage = "Não foi possível sair da conta"
       }
     );

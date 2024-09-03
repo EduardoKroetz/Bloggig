@@ -4,11 +4,12 @@ import { PostService } from '../../services/post.service';
 import { AlertModalService } from '../../services/alert-modal.service';
 import { ConfirmModalService } from '../../services/confirm-modal.service';
 import { ConfirmModalComponent } from "../confirm-modal/confirm-modal.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-post-options-dropdown',
   standalone: true,
-  imports: [CommonModule, ConfirmModalComponent],
+  imports: [CommonModule, ConfirmModalComponent, RouterLink],
   templateUrl: './post-options-dropdown.component.html',
   styleUrl: './post-options-dropdown.component.css'
 })

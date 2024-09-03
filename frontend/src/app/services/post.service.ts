@@ -9,6 +9,11 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
+  getPostsByIdAsync(postId: string)
+  {
+    return this.http.get(`${environment.apiUrl}/posts/${postId}`)
+  }
+
   getPostsAsync(pageSize: number, pageNumber: number)
   {
     return this.http.get(`${environment.apiUrl}/posts?pageSize=${pageSize}&pageNumber=${pageNumber}`)
@@ -24,5 +29,9 @@ export class PostService {
 
   deletePostAsync(postId: string) {
     return this.http.delete(`${environment.apiUrl}/posts/${postId}`,{ withCredentials: true });
+  }
+
+  updatePostAsync(postId: string, title: string, content: string, base64Thumbnail: string, tags: string[]){
+    return this.http.put(`${environment.apiUrl}/posts/${postId}`,{ title, content, base64Thumbnail, tags }, { withCredentials: true });
   }
 }

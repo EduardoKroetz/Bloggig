@@ -42,7 +42,7 @@ export class UserComponent implements OnInit {
             },
             (error) => {
               this.loadingUser = false;
-              this.alertModal.toggleModal()
+              this.alertModal.showModal();
               this.alertModal.modalMessage = "Não foi possível obter os dados do usuário"
             }
           )
