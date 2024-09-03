@@ -26,7 +26,9 @@
       #{{ tag.name }}
     </span>
   </div>
-  <div class="flex justify-center max-h-[330px] max-w-[500px] rounded-2xl">
+  <div (click)="openFullImage()" class="flex cursor-pointer justify-center max-h-[330px] max-w-[500px] rounded-2xl">
     <img *ngIf="post.thumbnailUrl" class="object-cover object-center flex-1 rounded-2xl" [src]="post.thumbnailUrl" alt="thumbnail">
   </div>
 </div>
+
+<app-full-image-modal (closeFullImage)="closeFullImage()" [fullImageIsOpen]="postFullImageIsOpen" [imageUrl]="post.thumbnailUrl"></app-full-image-modal>

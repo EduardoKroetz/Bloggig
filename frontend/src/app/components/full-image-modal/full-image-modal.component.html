@@ -1,0 +1,14 @@
+<div class="relative max-w-screen max-h-screen">
+  <div 
+    *ngIf="fullImageIsOpen" 
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+    (click)="closeModalOnClickOutside($event)"
+    >
+    <div class="relative h-auto w-auto">
+      <div (click)="closeModal()" class="absolute cursor-pointer right-0 z-10 p-2 hover:bg-gray-600 duration-200 rounded-full">
+        <app-close-icon class="text-white size-10"></app-close-icon>
+      </div>
+      <img [src]="imageUrl" class="flex rounded-xl" alt="image">
+    </div>
+  </div>
+</div>

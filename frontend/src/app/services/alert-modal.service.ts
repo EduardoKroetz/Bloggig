@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AlertModalService {
-  private modalIsOpen = false
+  modalIsOpen = false
   modalMessage = "Algo deu errado...";
   loading : boolean = true;
 

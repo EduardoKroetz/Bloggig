@@ -7,11 +7,12 @@ import { RouterLink } from '@angular/router';
 import { UserProfileService } from '../../services/user-profile.service';
 import User from '../../interfaces/User';
 import { PostOptionsDropdownComponent } from "../post-options-dropdown/post-options-dropdown.component";
+import { FullImageModalComponent } from "../full-image-modal/full-image-modal.component";
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [UserProfileImgComponent, CommonModule, TimeAgoPipe, RouterLink, PostOptionsDropdownComponent],
+  imports: [UserProfileImgComponent, CommonModule, TimeAgoPipe, RouterLink, PostOptionsDropdownComponent, FullImageModalComponent],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
 })
@@ -24,6 +25,7 @@ export class PostComponent implements OnChanges, OnInit {
   isAuthor: boolean = false;
   private authUser: User | null = null;
   postOptionsDropDownIsOpen = false;
+  postFullImageIsOpen = false;
 
   constructor(private userService: UserProfileService) {}
 
@@ -52,5 +54,13 @@ export class PostComponent implements OnChanges, OnInit {
 
   toggleDropDown() {
     this.postOptionsDropDownIsOpen = !this.postOptionsDropDownIsOpen;
+  }
+
+  openFullImage() {
+    this.postFullImageIsOpen = true;
+  }
+
+  closeFullImage() {
+    this.postFullImageIsOpen = false;
   }
 }
