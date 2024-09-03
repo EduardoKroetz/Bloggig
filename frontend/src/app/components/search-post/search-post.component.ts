@@ -42,9 +42,9 @@ export class SearchPostComponent {
 
   private filterPosts() {
     this.filteredPosts = this.posts?.filter(post => 
-      post.content.includes(this.input) || 
-      post.title.includes(this.input) || 
-      post.tags.some(tag => tag.name.includes(this.input))
+      post.content.toLowerCase().includes(this.input.toLowerCase()) || 
+      post.title.toLowerCase().includes(this.input.toLowerCase()) || 
+      post.tags.some(tag => tag.name.toLowerCase().includes(this.input.toLowerCase()))
     )
   }
 }

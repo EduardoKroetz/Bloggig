@@ -5,12 +5,7 @@
     <app-user-profile-img [user]="user"></app-user-profile-img>
     <h2>{{ user.username }}</h2>
   </div>
-  <hr class="w-full">
-  <div  *ngIf="posts.length > 0; else elseNoPosts" class="flex gap-1 pb-3 justify-center flex-wrap">
-    <div *ngFor="let post of posts">
-      <app-profile-post [post]="post"></app-profile-post>
-    </div>
-  </div>
+  <app-search-post class="w-full" [userId]="user.id"></app-search-post>
 </div>
 
 <ng-template #elseNoPosts>
