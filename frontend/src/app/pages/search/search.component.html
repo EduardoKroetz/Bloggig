@@ -1,36 +1,50 @@
 <div class="flex h-full">
   <!-- Seção Lateral Esquerda -->
-  <div class="w-1/4 p-4 border-r border-gray-300">
+  <div class="w-1/5 p-4 border-r border-gray-300">
     <h2 (click)="handleGetPosts()" class="text-xl font-semibold mb-4 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200 duration-200  hover:shadow-lg" [ngClass]="section === 'posts' ? 'bg-gray-200' : 'bg-gray-100'" >Posts</h2>
     <h2 (click)="handleGetUsers()" class="text-xl font-semibold mb-4 bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer hover:bg-gray-200 duration-200 hover:shadow-lg" [ngClass]="section === 'users' ? 'bg-gray-200' : 'bg-gray-100'">Usuários</h2>
   </div>
 
   <!-- Seção Lateral Direita -->
-  <div class="w-3/4 p-4">
-    <h1 class="text-2xl font-bold mb-2">Resultados para "{{ reference }}"</h1>
-    <div *ngIf="section === 'posts'">
-      <p class="mt-2 text-gray-400 font-semibold">{{ posts.length }} {{ posts.length === 1 ? "resultado" : "resultados" }}</p>
-      <div *ngFor="let post of posts" (click)="postModalService.showPostModal(post)" class="flex flex-col bg-white p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl duration-200">
-        <div class="flex gap-3">
-          <app-user-profile-img class="flex" [user]="post.author"></app-user-profile-img>
-          <div>
-            <p [routerLink]="'/users/' + post.authorId" class="cursor-pointer hover:underline">{{ post.author.username | titlecase }}</p>
-            <p class="text-xs">{{ post.createdAt | timeAgo }}</p>
-          </div>
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- header de resultados e paginação -->
+    <div class="text-2xl font-bold w-full p-3 border-b">
+      <h1>Resultados para "{{ reference }}"</h1>
+      <div class="flex justify-between w-full items-center">
+        <div 
+          (click)="handleBackPage()" 
+          class="rounded-full hover:bg-gray-200 p-3 duration-200 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
         </div>
-        <h2 class="text-xl font-semibold mb-2">{{ post.title }}</h2>
-        <p>{{ post.content.substring(0, 200) }}...</p>
-      </div>
-    </div>
-    <div *ngIf="section === 'users'">
-      <p class="mt-2 text-gray-400 font-semibold">{{ users.length }} {{ users.length === 1 ? "resultado" : "resultados" }}</p>
-      <div *ngFor="let user of users" [routerLink]="'/users/' + user.id" class="flex flex-col bg-white p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl duration-200">
-        <div class="flex gap-3 items-center">
-          <app-user-profile-img class="flex" [user]="user"></app-user-profile-img>
-          <p>{{ user.username | titlecase }}</p>
+        <div>{{ section === 'posts' ? postsGetParams.pageNumber : usersGetParams.pageNumber  }}</div>
+        <div 
+          (click)="section === 'posts' ? handleGetPosts() : handleGetUsers() " 
+          class="rounded-full hover:bg-gray-200 p-3 duration-200 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
         </div>
       </div>
     </div>
+
+    <!-- Resultados -->
+    <div class="h-full w-full p-4 overflow-auto">
+      <!-- posts -->
+      <div *ngIf="section === 'posts'">
+        <p class="mb-2 text-gray-400 font-semibold">{{ totalPosts.length }} {{ totalPosts.length === 1 ? "resultado" : "resultados" }}</p>
+        <app-post-result *ngFor="let post of posts" [post]="post"></app-post-result>
+      </div>
+
+      <!-- usuários -->
+      <div *ngIf="section === 'users'">
+        <p class="mb-2 text-gray-400 font-semibold">{{ totalUsers.length }} {{ totalUsers.length === 1 ? "resultado" : "resultados" }}</p>
+        <app-user-result *ngFor="let user of users" [user]="user"></app-user-result>
+      </div>
+    </div>
+    
 
   </div>
 </div>

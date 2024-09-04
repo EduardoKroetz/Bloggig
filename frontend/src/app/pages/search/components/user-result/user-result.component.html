@@ -1,0 +1,6 @@
+<div *ngIf="user" [routerLink]="'/users/' + user.id" class="flex flex-col mb-3 bg-white p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl duration-200">
+  <div class="flex gap-3 items-center">
+    <app-user-profile-img class="flex" [user]="user"></app-user-profile-img>
+    <p>{{ user.username | titlecase }}</p>
+  </div>
+</div>
