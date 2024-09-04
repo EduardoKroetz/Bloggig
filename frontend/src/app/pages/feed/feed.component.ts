@@ -28,7 +28,6 @@ export class FeedComponent implements OnInit {
   getPosts(){
     this.postService.getPostsAsync(this.pageSize, this.pageNumber).subscribe(
       (res : any) => {
-        console.log(res.data)
         this.posts = [...this.posts, ...res.data]
         this.loadingPosts = false;
       },

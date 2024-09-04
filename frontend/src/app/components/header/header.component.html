@@ -8,7 +8,7 @@
   </div>
 
   <!-- Modal para exibir opções de ações do usuário -->
-  <app-menu-modal class="fixed" (closeModal)="toggleModal()" [modalIsOpen]="modalIsOpen" [userProfileUrl]="userProfileUrl"></app-menu-modal>
+  <app-menu-modal class="fixed z-50" (closeModal)="toggleModal()" [modalIsOpen]="modalIsOpen" [userProfileUrl]="userProfileUrl"></app-menu-modal>
 </div>
 
 <ng-template #elseNoUser>

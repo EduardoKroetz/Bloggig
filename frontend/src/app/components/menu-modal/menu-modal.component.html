@@ -2,8 +2,8 @@
 <div 
 [ngClass]="modalIsOpen ? 'visible opacity-100' : 'invisible opacity-0'"
 (click)="onClickOutModal($event)"
-class="fixed inset-0 flex justify-end bg-gray-800 bg-opacity-50 z-1000">
-  <div class="bg-white w-full sm:w-[250px] p-4 flex flex-col items-center gap-5 transform transition-transform duration-300 ease-out"
+class="fixed inset-0 flex justify-end bg-gray-800 bg-opacity-50 z-50">
+  <div class="bg-white sm:w-[250px] p-4 flex flex-col items-center gap-5 transform transition-transform duration-300 ease-out"
   [ngClass]="modalIsOpen ? 'translate-x-0' : 'translate-x-full'">
     <div class="w-full flex justify-end items-center cursor-pointer">
       <app-close-icon class="flex cursor-pointer hover:bg-gray-200 rounded-full duration-200 p-2" (click)="leaveModal()"></app-close-icon>

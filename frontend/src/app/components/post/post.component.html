@@ -8,8 +8,8 @@
         <p class="text-xs">{{ post.createdAt | timeAgo }}</p>
       </div>
     </div>
-    <div *ngIf="isAuthor" class="relative">
-      <div class="flex justify-center z-0 items-center h-[30px] w-[30px] cursor-pointer rounded-full hover:bg-gray-100 duration-200" (click)="toggleDropDown()">
+    <div *ngIf="isAuthor" class="relative z-1">
+      <div class="flex justify-center items-center h-[30px] w-[30px] cursor-pointer rounded-full hover:bg-gray-100 duration-200" (click)="toggleDropDown()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
         </svg>

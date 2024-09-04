@@ -5,6 +5,7 @@ import { AlertModalService } from '../../services/alert-modal.service';
 import { ConfirmModalService } from '../../services/confirm-modal.service';
 import { ConfirmModalComponent } from "../confirm-modal/confirm-modal.component";
 import { RouterLink } from '@angular/router';
+import { PostModalService } from '../../services/post-modal.service';
 
 @Component({
   selector: 'app-post-options-dropdown',
@@ -18,7 +19,7 @@ export class PostOptionsDropdownComponent {
   @Input() postId = ""; 
   @Output() closedropdown = new EventEmitter<any>();
 
-  constructor ( private postService: PostService, private alertService: AlertModalService, private confirmModalService: ConfirmModalService ) {}
+  constructor ( private postService: PostService, private alertService: AlertModalService, private confirmModalService: ConfirmModalService, public postModalService: PostModalService ) {}
 
   onCloseDropdown() {
     this.dropdownIsOpen = false;

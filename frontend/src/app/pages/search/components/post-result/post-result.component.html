@@ -7,5 +7,6 @@
     </div>
   </div>
   <h2 class="text-xl font-semibold mb-2">{{ post.title }}</h2>
-  <p>{{ post.content.substring(0, 200) }}...</p>
+  <p class="hidden md:block">{{ post.content.substring(0, 200) }}...</p>
+  <p class="block md:hidden">{{ post.content.substring(0, 100) }}...</p>
 </div>
