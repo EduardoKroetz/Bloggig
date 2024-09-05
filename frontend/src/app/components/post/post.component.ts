@@ -13,6 +13,7 @@ import { CommentService } from '../../services/comment.service';
 import { AlertModalService } from '../../services/alert-modal.service';
 import { CommentComponent } from "../comment/comment.component";
 import { FormsModule } from '@angular/forms';
+import { UserTagPointsService } from '../../services/user-tag-points.service';
 
 @Component({
   selector: 'app-post',
@@ -34,8 +35,9 @@ export class PostComponent implements OnChanges, OnInit {
   comments : { data: Comment[], pageSize: number, pageNumber: number, limitReached: boolean } = { data: [], pageSize: 5, pageNumber: 1, limitReached: false }
   newComment = "";
   commentIsOpen = false;
+  isLiked = false;
 
-  constructor(private userService: UserProfileService, private commentService: CommentService, private alertService: AlertModalService) {}
+  constructor(private userService: UserProfileService, private commentService: CommentService, private alertService: AlertModalService, private userTagPointsService: UserTagPointsService) {}
 
   ngOnInit(): void {
     this.userService.userProfile$.subscribe(data => {
@@ -128,5 +130,9 @@ export class PostComponent implements OnChanges, OnInit {
     const commentIndex = this.comments.data.indexOf(currentComment);
     this.comments.data.splice(commentIndex, 1, comment);
     this.comments.pageNumber = 1;
+  }
+
+  handleCreateUserTagPoint(){
+    this.userTagPointsService.createUserTagPoint(this.post.id);
   }
 }

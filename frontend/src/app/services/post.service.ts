@@ -14,9 +14,9 @@ export class PostService {
     return this.http.get(`${environment.apiUrl}/posts/${postId}`)
   }
 
-  getPostsAsync(pageSize: number, pageNumber: number)
+  getPostsAsync(pageSize: number)
   {
-    return this.http.get(`${environment.apiUrl}/posts?pageSize=${pageSize}&pageNumber=${pageNumber}`)
+    return this.http.get(`${environment.apiUrl}/posts?pageSize=${pageSize}`, { withCredentials: true })
   }
 
   getUserPosts(userId: string, pageSize: number, pageNumber: number){

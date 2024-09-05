@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input,  Output } from '@angular/core';
+import { Component, EventEmitter, Input,  OnChanges,  Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -24,10 +24,15 @@ export interface IPostFormError {
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.css']
 })
-export class PostFormComponent {
+export class PostFormComponent implements OnChanges {
   @Output() onSubmit = new EventEmitter<IPostForm>();
   @Input() postForm: IPostForm = { title: "", content: "", tags: "", thumbnail: null, thumbnailBase64: "", thumbnailLink: null };
   @Input() postFormError: IPostFormError = {errorContent: null, errorThumbnail: null, errorTitle: null }
+  isSumbmitted = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.isSumbmitted = false;
+  }
 
   onThumbnailChange(event: any) {
     if (!this.postForm) return;
