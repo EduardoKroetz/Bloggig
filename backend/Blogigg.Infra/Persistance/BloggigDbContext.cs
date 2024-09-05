@@ -16,6 +16,7 @@ public class BloggigDbContext : DbContext
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Tag> Tags { get; set; }
+    public DbSet<UserTagPoints> UserTagPoints { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,7 +24,11 @@ public class BloggigDbContext : DbContext
             .HasIndex(x => x.Email).IsUnique();
 
         modelBuilder.Entity<Post>()
+            .HasMany(p => p.Tags)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("PostTags"))
             .HasOne(x => x.Author);
+
         modelBuilder.Entity<Comment>()
             .HasOne(x => x.Author);
 
@@ -31,8 +36,10 @@ public class BloggigDbContext : DbContext
             .HasIndex(x => x.Name).IsUnique();
 
         modelBuilder.Entity<Tag>()
-            .HasMany(t => t.Posts)
-            .WithMany(p => p.Tags)
-            .UsingEntity(j => j.ToTable("PostTags")); 
+            .HasMany(t => t.UserTagPoints)
+            .WithOne();
+
+        modelBuilder.Entity<UserTagPoints>()
+            .HasKey(x => new { x.TagId, x.UserId });
     }
 }

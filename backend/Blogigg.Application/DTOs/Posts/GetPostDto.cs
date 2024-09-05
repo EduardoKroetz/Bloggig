@@ -12,6 +12,7 @@ public class GetPostDto
     public GetUserDto Author { get; set; }
     public string? ThumbnailUrl { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int CommentsCount { get; set; }
     public List<GetTag> Tags { get; set; } = new List<GetTag>();
 
 }

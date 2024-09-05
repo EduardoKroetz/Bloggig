@@ -11,4 +11,5 @@ public interface ICommentRepository
     Task UpdateAsync(Comment comment);
     Task<Comment?> GetById(Guid id);
     Task<IEnumerable<Comment>> GetPostComments(Guid postId, int pageSize, int pageNumber);
+    Task<Dictionary<Guid, int>> GetCommentsCountByPostIdsAsync(List<Guid> postIds);
 }

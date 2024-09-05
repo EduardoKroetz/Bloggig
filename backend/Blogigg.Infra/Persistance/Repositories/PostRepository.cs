@@ -29,6 +29,7 @@ public class PostRepository : IPostRepository
         return await _context.Posts
             .AsNoTracking()
             .Include(p => p.Author)
+            .Include(p => p.Tags)
             .Where(p => 
                 keyWords.Any(keyWord => p.Tags.Any(
                     tag => tag.Name.ToLower().Contains(keyWord))) || 
@@ -50,17 +51,16 @@ public class PostRepository : IPostRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Post>> GetPostsAsync(int pageSize, int pageNumber)
+    public async Task<List<Post>> GetAllPostsAsync()
     {
         return await _context.Posts
-            .AsNoTracking()
-            .Include(p => p.Author)
+            .Where(p => p.Status != "deleted")
             .Include(p => p.Tags)
-            .Skip(( pageNumber - 1 ) * pageSize)
-            .Take(pageSize)
-            .Where(x => x.Status != "deleted")
+                .ThenInclude(t => t.UserTagPoints)
+            .Include(p => p.Author)
             .ToListAsync();
     }
+
 
     public async Task<List<Post>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
     {

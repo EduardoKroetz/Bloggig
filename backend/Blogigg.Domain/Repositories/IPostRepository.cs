@@ -8,6 +8,6 @@ public interface IPostRepository
     Task<IEnumerable<Post>> GetByReferencesAsync(List<string> references, int pageSize, int pageNumber);
     Task<Post?> GetById(Guid id);
     Task UpdateAsync(Post post);
-    Task<List<Post>> GetPostsAsync(int pageSize, int pageNumber);
+    Task<List<Post>> GetAllPostsAsync();
     Task<List<Post>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber);
 }

@@ -5,6 +5,8 @@ using Bloggig.Application.Services.Interfaces;
 using Bloggig.Domain.Entities;
 using Bloggig.Domain.Repositories;
 using Bloggig.Infra.Services.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Bloggig.Application.Services;
 
@@ -12,11 +14,15 @@ public class PostService : IPostService
 {
     private readonly IAzureBlobStorageService _azureBlobStorageService;
     private readonly IPostRepository _postRepository;
+    private readonly ICommentRepository _commentRepository;
+    private readonly IDistributedCache _cache;
 
-    public PostService(IAzureBlobStorageService azureBlobStorageService, IPostRepository postRepository)
+    public PostService(IAzureBlobStorageService azureBlobStorageService, IPostRepository postRepository, ICommentRepository commentRepository, IDistributedCache cache)
     {
         _azureBlobStorageService = azureBlobStorageService;
         _postRepository = postRepository;
+        _commentRepository = commentRepository;
+        _cache = cache;
     }
 
     public async Task<Post> CreatePostAsync(EditorPostDto editorPostDto, List<Tag> tags ,Guid userId)
@@ -57,9 +63,12 @@ public class PostService : IPostService
     {
         //Vai separar as palavras por espaços em branco para então filtrar
         //as palavras com mais de 3 caracteres
-        var keys = reference.ToLower().Split(" ").Where(x => x.Length > 2).ToList();
+        var keys = reference.ToLower().Split(" ").ToList();
 
         var posts = await _postRepository.GetByReferencesAsync(keys,pageSize, pageNumber);
+
+        var postsIds = posts.Select(p => p.Id).ToList();
+        var commentsCount = await _commentRepository.GetCommentsCountByPostIdsAsync(postsIds);
 
         return posts.Select(p => new GetPostDto
         {
@@ -69,6 +78,7 @@ public class PostService : IPostService
             Title = p.Title,
             AuthorId = p.AuthorId,
             CreatedAt = p.CreatedAt,
+            CommentsCount = commentsCount.TryGetValue(p.Id, out int value) ? value : 0,
             Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
             Author = new GetUserDto
             {
@@ -118,10 +128,44 @@ public class PostService : IPostService
         await _postRepository.UpdateAsync(post);
     }
 
-    public async Task<List<GetPostDto>> GetPostsAsync(int pageSize, int pageNumber)
+    public async Task<List<GetPostDto>> GetFeedPostsAsync(Guid userId ,int pageSize, int pageNumber)
     {
-        var posts = await _postRepository.GetPostsAsync(pageSize, pageNumber);
-        return posts.Select(p => new GetPostDto
+        int exploratoryPageSize = (int)( pageSize / 5 );
+        int recommendedPageSize = pageSize - exploratoryPageSize;
+        List<Post> allPosts;
+        var allPostsKeyCache = "feed_posts";
+
+        //Verificar se todos os posts estão em cache
+        var cachedPosts = await _cache.GetStringAsync(allPostsKeyCache);
+        if (cachedPosts != null)
+        {
+            allPosts = JsonConvert.DeserializeObject<List<Post>>(cachedPosts) ?? throw new Exception("Ocorreu um erro ao deserializar os posts");
+            //Se estão em cache, filtrar eles
+            allPosts = FilterFeedPosts(allPosts, userId, recommendedPageSize, exploratoryPageSize, pageNumber);
+  
+        }else
+        {
+            allPosts = await _postRepository.GetAllPostsAsync();
+            var allPostsString = JsonConvert.SerializeObject(allPosts);
+
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)
+            };
+
+            await _cache.SetStringAsync(allPostsKeyCache, allPostsString, cacheOptions);
+
+            allPosts = FilterFeedPosts(allPosts, userId, recommendedPageSize, exploratoryPageSize, pageNumber);
+        }
+
+        //Mistura os posts
+        var random = new Random();
+        allPosts = allPosts.OrderBy(x => random.Next()).ToList();
+
+        var postsIds = allPosts.Select(p => p.Id).ToList();
+        var commentsCount = await _commentRepository.GetCommentsCountByPostIdsAsync(postsIds);
+
+        return allPosts.Select(p => new GetPostDto
         {
             Id = p.Id,
             Content = p.Content,
@@ -129,6 +173,7 @@ public class PostService : IPostService
             Title = p.Title,
             AuthorId = p.AuthorId,
             CreatedAt = p.CreatedAt,
+            CommentsCount = commentsCount.TryGetValue(p.Id, out int value) ? value : 0,
             Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
             Author = new GetUserDto 
             { 
@@ -139,10 +184,56 @@ public class PostService : IPostService
             }
         }).ToList();
     }
+    
+    private List<Post> FilterFeedPosts(List<Post> allPosts, Guid userId, int recommendedPageSize, int exploratoryPageSize, int pageNumber)
+    {
+        var recommendedPosts = FilterRecommendedPosts(allPosts, userId, recommendedPageSize, pageNumber);
+        var exploratoryPosts = FilterExploratoryPosts(allPosts, exploratoryPageSize);
+        //Concatenar posts recomendados com exploratórios(posts de descoberta)
+        allPosts = [.. recommendedPosts, .. exploratoryPosts];
+        return allPosts;
+    }
 
+    private List<Post> FilterRecommendedPosts(List<Post> posts, Guid userId , int pageSize, int pageNumber)
+    {
+        return posts
+            .Select(post => new
+            {
+                Post = post,
+                Points = post.Tags
+                    .Select(tag => tag.UserTagPoints
+                        .Where(utp => utp.UserId == userId)
+                        .Select(utp => utp.Points)
+                        .DefaultIfEmpty(0) // Se não houver pontos para o usuário, usa 0
+                        .Sum()) // Soma dos pontos
+                    .Sum() // Soma dos pontos das tags
+            })
+            .OrderByDescending(x => x.Points)
+            .Skip(( pageNumber - 1 ) * pageSize)
+            .Take(pageSize)
+            .Select(x => x.Post)
+            .ToList();
+    }
+
+    private List<Post> FilterExploratoryPosts(List<Post> posts, int pageSize)
+    {
+        if (posts.Count < 50)
+            return [];
+
+        Random random = new Random();
+
+        return posts
+            .OrderBy(x => random.Next())
+            .Take(pageSize)
+            .ToList();
+    }
     public async Task<List<GetPostDto>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
     {
         var posts = await _postRepository.GetUserPostsAsync(userId ,pageSize, pageNumber);
+
+        var postsIds = posts.Select(p => p.Id).ToList();
+        var commentsCount = await _commentRepository.GetCommentsCountByPostIdsAsync(postsIds);
+
         return posts.Select(p => new GetPostDto
         {
             Id = p.Id,
@@ -151,6 +242,7 @@ public class PostService : IPostService
             Title = p.Title,
             AuthorId = p.AuthorId,
             CreatedAt = p.CreatedAt,
+            CommentsCount = commentsCount.TryGetValue(p.Id, out int value) ? value : 0,
             Tags = p.Tags.Select(t => new GetTag { Id = t.Id, Name = t.Name }).ToList(),
             Author = new GetUserDto
             {

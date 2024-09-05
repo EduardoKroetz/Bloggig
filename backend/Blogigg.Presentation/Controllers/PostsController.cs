@@ -54,9 +54,11 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetPostsAsync([FromQuery] int pageSize = 15, [FromQuery] int pageNumber = 1)
     {
-        var posts = await _postService.GetPostsAsync(pageSize, pageNumber);
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+        var posts = await _postService.GetFeedPostsAsync(userId ,pageSize, pageNumber);
         return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
     }
 

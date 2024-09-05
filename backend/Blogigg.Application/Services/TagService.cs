@@ -30,7 +30,6 @@ public class TagService : ITagService
             {
                 Id = Guid.NewGuid(),
                 Name = name,
-                Posts = []
             };
 
             await _tagRepository.AddAsync(newTag);
