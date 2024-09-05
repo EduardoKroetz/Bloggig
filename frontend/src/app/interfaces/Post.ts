@@ -12,5 +12,6 @@ export default interface Post
   createdAt: Date,
   updatedAt: Date,
   status: string,
+  commentsCount: number,
   tags: Tag[]
 } 
