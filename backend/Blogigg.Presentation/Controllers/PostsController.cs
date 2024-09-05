@@ -55,11 +55,36 @@ public class PostsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetPostsAsync([FromQuery] int pageSize = 15, [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetPostsAsync([FromQuery] int pageSize = 15)
     {
-        var userId = Utils.Utils.GetUserIdFromClaim(User);
-        var posts = await _postService.GetFeedPostsAsync(userId ,pageSize, pageNumber);
-        return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
+        try
+        {
+            var userId = Utils.Utils.GetUserIdFromClaim(User);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(ResultDto.BadResult("Usuário não encontrado"));
+            }
+
+            var posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
+            if (posts.Count == 0)
+            {
+                user.CurrentPostsPageNumber = 1;
+            }
+            else
+            {
+                user.CurrentPostsPageNumber++;
+            }
+
+            await _userService.UpdateUserAsync(user);
+
+            return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+      
     }
 
 

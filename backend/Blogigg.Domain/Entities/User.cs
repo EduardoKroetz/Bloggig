@@ -9,6 +9,7 @@ public class User
     public string? ProfileImageUrl { get; private set; }
     public bool IsOAuthUser { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    public int CurrentPostsPageNumber { get; set; } = 1;
 
     public User(Guid id, string username, string email, string passwordHash, string? profileImageUrl, bool isOAuthUser, DateTime createdAt)
     {
@@ -19,6 +20,7 @@ public class User
         ProfileImageUrl = profileImageUrl;
         IsOAuthUser = isOAuthUser;
         CreatedAt = createdAt;
+        CurrentPostsPageNumber = 1;
     }
 
     public void UpdateProfileImage(string newProfileImageUrl)
