@@ -1,6 +1,6 @@
 <div *ngIf="comment" class="flex text-sm justify-between gap-3 rounded">
   <div class="flex items-center gap-3">
-    <app-user-profile-img [ngClass]="isEdit ? 'hidden sm:block' : '' " [routerLink]="'/users/'+ comment.authorId" [user]="comment.author"></app-user-profile-img>
+    <app-user-profile-img *ngIf="!isEdit" [routerLink]="'/users/'+ comment.authorId" [user]="comment.author"></app-user-profile-img>
     <div class="flex flex-col">
       <div class="text-xs">{{ comment.author.username }}</div>
       <form (submit)="handleUpdateComment($event)" *ngIf="isEdit" class="flex items-center gap-2 flex-col sm:flex-row"> 

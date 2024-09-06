@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = "localhost:6379";
+    options.Configuration = "redis:6379";
     options.InstanceName = "redis";
 });
 
@@ -53,13 +53,13 @@ builder.Services.AddCors(x => x.AddPolicy("BloggigFrontend", builder =>
         .AllowCredentials();
 }));
 
-//Adiciona DbContext e a conexão com o SQL Server
+//Adiciona DbContext e a conexï¿½o com o SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
 builder.Services.AddDbContext<BloggigDbContext>(options => {
     options.UseSqlServer(connectionString);
 });
 
-//Configura autenticação
+//Configura autenticaï¿½ï¿½o
 LoadAutheticationConfig();
 
 var app = builder.Build();
@@ -88,7 +88,7 @@ void LoadAutheticationConfig()
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme; //Esquema que vai usar para fazer login quando o usuário não estiver logado
+        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme; //Esquema que vai usar para fazer login quando o usuï¿½rio nï¿½o estiver logado
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
     })
     .AddCookie(options =>
@@ -96,7 +96,6 @@ void LoadAutheticationConfig()
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.Cookie.SameSite = SameSiteMode.None;
-        options.Cookie.Domain = "localhost";
         options.Events.OnValidatePrincipal = async context =>
         {
             var accessToken = context.Principal.FindFirst("access_token")?.Value;
