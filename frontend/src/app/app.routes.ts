@@ -9,6 +9,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { NewPostComponent } from './pages/new-post/new-post.component';
 import { EditPostComponent } from './pages/edit-post/edit-post.component';
 import { SearchComponent } from './pages/search/search.component';
+import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
 
 export const routes: Routes = 
 [
@@ -17,7 +18,7 @@ export const routes: Routes =
     component: AuthLayoutComponent,
     children: [
       { path: "login", component: LoginComponent },
-      { path: "register", component: RegisterComponent }
+      { path: "register", component: RegisterComponent },
     ]
   },
   { 
@@ -30,7 +31,8 @@ export const routes: Routes =
       { path: 'user/settings', component: SettingsComponent },
       { path: 'posts/new-post', component: NewPostComponent },
       { path: 'posts/edit-post/:id', component: EditPostComponent },
-      { path: 'search', component: SearchComponent }
+      { path: 'search', component: SearchComponent },
+      { path: "profile-image", component: ProfileImageComponent }
     ] 
   },
   {

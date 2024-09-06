@@ -41,7 +41,7 @@ export class RegisterFormComponent {
       (res) => {
         this.isSubmitted = false;
         //Redirecionar
-        this.router.navigate(['/']);
+        this.router.navigate(['/profile-image']);
       },
       (error) => {
         this.isSubmitted = false;

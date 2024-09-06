@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { UserIconComponent } from "../user-icon/user-icon.component";
 import { FormsModule } from '@angular/forms';
 import { AlertModalService } from '../../services/alert-modal.service';
+import { ProfileImageFormComponent } from "../profile-image-form/profile-image-form.component";
 
 @Component({
   selector: 'app-user-settings-info',
   standalone: true,
-  imports: [UserProfileImgComponent, CommonModule, UserIconComponent, FormsModule],
+  imports: [UserProfileImgComponent, CommonModule, UserIconComponent, FormsModule, ProfileImageFormComponent],
   templateUrl: './user-settings-info.component.html',
   styleUrl: './user-settings-info.component.css'
 })

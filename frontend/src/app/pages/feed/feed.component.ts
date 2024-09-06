@@ -15,7 +15,7 @@ import { LoadingComponent } from "../../components/loading/loading.component";
 })
 export class FeedComponent implements OnInit {
   posts : Post[] = [];
-  pageSize = 10;
+  pageSize = 15;
   loadingPosts = true;
 
   constructor (private postService: PostService, private alertModal: AlertModalService) {}
@@ -27,7 +27,9 @@ export class FeedComponent implements OnInit {
   getPosts(){
     this.postService.getPostsAsync(this.pageSize).subscribe(
       (res : any) => {
-        this.posts = [...this.posts, ...res.data]
+        if (res.data.length > 0)
+          this.posts = [...this.posts, ...res.data]
+
         this.loadingPosts = false;
       },
       (error) => {

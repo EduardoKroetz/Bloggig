@@ -9,12 +9,13 @@
       </svg>
       <p>Editar</p>
     </button>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col items-center sm:items-start gap-4 h-full w-full">
       <h1 *ngIf="!isEditing" class="text-xl">{{ username }}</h1>
-      <input class="border rounded p-2 w-[240px]" [(ngModel)]="username" *ngIf="isEditing">
+      <input class="border rounded p-2 w-[240px] sm:w-full" [(ngModel)]="username" *ngIf="isEditing">
       <p *ngIf="!isEditing">{{ email }}</p>
-      <input class="border rounded p-2 w-[240px]" [(ngModel)]="email" *ngIf="isEditing">
+      <input class="border rounded p-2 w-[240px] sm:w-full" [(ngModel)]="email" *ngIf="isEditing">
     </div>
+    <app-profile-image-form *ngIf="isEditing"></app-profile-image-form>
   </div>
 </div>
 

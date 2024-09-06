@@ -42,4 +42,8 @@ export class UserProfileService {
   searchUsersAsync(reference: string, pageSize: number, pageNumber: number) {
     return this.http.get(`${environment.apiUrl}/users/search?name=${reference}&pageSize=${pageSize}&pageNumber=${pageNumber}`)
   }
+
+  uploadProfileImage(base64ProfileImage: string){
+    return this.http.patch(`${environment.apiUrl}/users/profile-image`, { base64ProfileImage }, { withCredentials: true })
+  }
 }
