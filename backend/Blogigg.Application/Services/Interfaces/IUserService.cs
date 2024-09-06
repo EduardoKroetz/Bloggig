@@ -14,5 +14,5 @@ public interface IUserService
     Task UpdateUserAsync(User user);
     Task DeleteUserAsync(User user);
     Task<IEnumerable<GetUserDto>> GetUsersByName(string name,int pageSize, int pageNumber);
-
+    Task UpdateProfileImage(UpdateProfileImageDto profileImageDto, User user);
 }

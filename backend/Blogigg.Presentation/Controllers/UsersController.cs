@@ -81,8 +81,13 @@ public class UsersController : Controller
 
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> PutUserAsync([FromBody] UpdateUserDto updateUserDto)
+    public async Task<IActionResult> PutUserAsync([FromBody] UpdateProfileImageDto profileImageDto)
     {
+        if (profileImageDto.Base64ProfileImage == null)
+        {
+            return BadRequest(ResultDto.BadResult("Informe a nova imagem de perfil"));
+        }
+
         var userId = Utils.Utils.GetUserIdFromClaim(User);
 
         //Buscar o usuário
@@ -91,14 +96,6 @@ public class UsersController : Controller
         {
             return NotFound(ResultDto.BadResult("Usuário não encontrado"));
         }
-
-        if (user.IsOAuthUser && user.Email != updateUserDto.Email)
-        {
-            return BadRequest(ResultDto.BadResult("Usuários vinculados com conta google não podem alterar o email"));
-        }
-
-        user.UpdateEmail(updateUserDto.Email);
-        user.UpdateUsername(updateUserDto.Username);
 
         await _userService.UpdateUserAsync(user);
 
@@ -126,4 +123,22 @@ public class UsersController : Controller
 
         return Ok(ResultDto.SuccessResult(new { }, "Usuário deletado com sucesso!"));
     }
-}
+
+    [HttpPatch("profile-image")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfileImageAsync([FromBody] UpdateProfileImageDto updateUserDto)
+    {
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+
+        //Buscar o usuário
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
+        }
+
+        await _userService.UpdateProfileImage(updateUserDto, user);
+
+        return Ok(ResultDto.SuccessResult(new { }, "Imagem de perfil atualizada com sucesso!"));
+    }
+} 

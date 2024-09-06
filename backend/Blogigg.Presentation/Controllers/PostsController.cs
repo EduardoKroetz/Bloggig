@@ -57,34 +57,27 @@ public class PostsController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetPostsAsync([FromQuery] int pageSize = 15)
     {
-        try
+        var userId = Utils.Utils.GetUserIdFromClaim(User);
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
         {
-            var userId = Utils.Utils.GetUserIdFromClaim(User);
-            var user = await _userService.GetUserByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound(ResultDto.BadResult("Usuário não encontrado"));
-            }
-
-            var posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
-            if (posts.Count == 0)
-            {
-                user.CurrentPostsPageNumber = 1;
-            }
-            else
-            {
-                user.CurrentPostsPageNumber++;
-            }
-
-            await _userService.UpdateUserAsync(user);
-
-            return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
+            return NotFound(ResultDto.BadResult("Usuário não encontrado"));
         }
-        catch (Exception e)
+
+        var posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
+        if (posts.Count == 0)
         {
-            throw e;
+            user.CurrentPostsPageNumber = 1;
+            posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
         }
-      
+        else
+        {
+            user.CurrentPostsPageNumber++;
+        }
+
+        await _userService.UpdateUserAsync(user);
+
+        return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));
     }
 
 

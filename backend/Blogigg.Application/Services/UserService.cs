@@ -99,4 +99,25 @@ public class UserService : IUserService
             ProfileImageUrl = u.ProfileImageUrl
         }).ToList();
     }
+
+    public async Task UpdateProfileImage(UpdateProfileImageDto profileImageDto, User user)
+    {
+        if (string.IsNullOrEmpty(profileImageDto.Base64ProfileImage))
+        {
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+        {
+            //Deletar a imagem de perfil
+            await _azureBlobStorageService.DeleteProfileImageAsync(user.ProfileImageUrl);
+        }
+
+        //Fazer o upload da nova imagem de perfil
+        var newProfileImageUrl = await _azureBlobStorageService.UploadProfileImageAsync(profileImageDto.Base64ProfileImage, user.Username);
+
+        user.UpdateProfileImage(newProfileImageUrl);
+
+        await _userRepository.UpdateAsync(user);
+    }
 }
