@@ -67,5 +67,5 @@
       </div>
     </div>
   </div>
-  <button type="submit" (click)="isSumbmitted = true" [disabled]="isSumbmitted" class="bg-blue-400 rounded-lg p-2 hover:bg-blue-600 hover:text-white font-semibold duration-200 shadow-lg">Publicar</button>
+  <button type="submit" (click)="isSumbmitted = true" [disabled]="isSumbmitted" class="bg-blue-400 rounded-lg p-2 hover:bg-blue-600 hover:text-white font-semibold duration-200 shadow-lg"> {{ isSumbmitted ? "Publicando..." : "Publicar" }}</button>
 </form>
