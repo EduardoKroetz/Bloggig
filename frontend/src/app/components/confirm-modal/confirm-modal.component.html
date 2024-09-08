@@ -12,8 +12,8 @@
         <button (click)="confirmModal.toggleModal()" class="bg-red-500 text-white py-2 px-4 rounded">
           Cancelar
         </button>
-        <button (click)="onConfirm()" class="bg-blue-500 text-white py-2 px-4 rounded">
-          Confirmar
+        <button (click)="onConfirm(); isConfirmed = true" [disabled]="isConfirmed" class="bg-blue-500 text-white py-2 px-4 rounded">
+          {{ isConfirmed ? "..." : "Confirmar" }}
         </button>
       </div>
 

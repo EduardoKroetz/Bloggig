@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ConfirmModalComponent {
   @Output() confirm = new EventEmitter<any>() 
+  isConfirmed = false;
 
   constructor (public confirmModal: ConfirmModalService) {}
 
