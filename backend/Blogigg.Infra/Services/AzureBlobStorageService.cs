@@ -69,7 +69,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
     }
 
 
-    public async Task<string> UploadPostThumbnailAsync(string Base64Img, string postTitle)
+    public async Task<string> UploadPostThumbnailAsync(string Base64Img)
     {
         var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new System.Exception("Invalid blob posts thumbnail container name");
         //Busca o container de imagens
@@ -82,12 +82,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
         byte[] imageBytes = Convert.FromBase64String(Base64Img);
 
         //Criar um nome único para o blob
-        var blobStrBuilder = new StringBuilder();
-        blobStrBuilder.Append(postTitle.Replace(' ', '-').ToLower());
-        blobStrBuilder.Append('-');
-        blobStrBuilder.Append(new Random(6).Next());
-
-        var blobName = blobStrBuilder.ToString();
+        var blobName = Guid.NewGuid().ToString();
 
         //Carregar os bytes da imagem Base64 para o blob
         using (var stream = new MemoryStream(imageBytes))

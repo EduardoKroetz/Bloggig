@@ -32,7 +32,7 @@ public class PostService : IPostService
         string thumbnailUrl = null;
         if (!string.IsNullOrEmpty(editorPostDto.Base64Thumbnail))
         {
-           thumbnailUrl = await _azureBlobStorageService.UploadPostThumbnailAsync(editorPostDto.Base64Thumbnail, editorPostDto.Title);
+           thumbnailUrl = await _azureBlobStorageService.UploadPostThumbnailAsync(editorPostDto.Base64Thumbnail);
         }
 
         var post = new Post
@@ -101,7 +101,7 @@ public class PostService : IPostService
             }
 
             //Carregar a nova imagem do post
-            post.ThumbnailUrl = await _azureBlobStorageService.UploadPostThumbnailAsync(editorPostDto.Base64Thumbnail, editorPostDto.Title);
+            post.ThumbnailUrl = await _azureBlobStorageService.UploadPostThumbnailAsync(editorPostDto.Base64Thumbnail);
         }
 
         post.Title = editorPostDto.Title;
@@ -115,17 +115,13 @@ public class PostService : IPostService
 
     public async Task DeletePostAsync(Post post)
     {
+        await _postRepository.DeleteAsync(post);
+
         //Deletar a thumbnail se ela existir
         if (!string.IsNullOrEmpty(post.ThumbnailUrl))
         {
             await _azureBlobStorageService.DeletePostThumbnailAsync(post.ThumbnailUrl);
         }
-
-        post.Status = "deleted";
-        post.ThumbnailUrl = null;
-        post.UpdatedAt = DateTime.Now;
-
-        await _postRepository.UpdateAsync(post);
     }
 
     public async Task<List<GetPostDto>> GetFeedPostsAsync(Guid userId ,int pageSize, int pageNumber)

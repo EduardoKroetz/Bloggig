@@ -10,4 +10,5 @@ public interface IPostRepository
     Task UpdateAsync(Post post);
     Task<List<Post>> GetAllPostsAsync();
     Task<List<Post>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber);
+    Task DeleteAsync(Post post);
 }

@@ -47,7 +47,13 @@ public class PostRepository : IPostRepository
 
     public async Task UpdateAsync(Post post)
     {
-        _context.Update(post);
+        _context.Posts.Update(post);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Post post)
+    {
+        _context.Posts.Remove(post);
         await _context.SaveChangesAsync();
     }
 
