@@ -43,7 +43,10 @@ export class FeedComponent implements OnInit {
         if (error.status === 401)
         {
           this.alertModal.modalMessage = "Você não está autenticado, redirecionando..."
-          setTimeout(() => { this.router.navigate(["/auth/login"]) }, 2000)
+          setTimeout(() => { 
+            this.router.navigate(["/auth/login"]) 
+            this.alertModal.modalIsOpen = false;
+          }, 1200)
         }else
         {
           this.alertModal.modalMessage = "Não foi possível obter os dados do servidor"
