@@ -5,7 +5,9 @@ using Bloggig.Infra.Persistance;
 using Bloggig.Infra.Persistance.Repositories;
 using Bloggig.Infra.Services;
 using Bloggig.Infra.Services.Interfaces;
+using Bloggig.Presentation.Exception;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,13 +16,20 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = "redis:6379";
-    options.InstanceName = "redis";
+    options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+    {
+        AbortOnConnectFail = false, 
+        ConnectTimeout = 5000, 
+        EndPoints = { "redis:6379" }
+    };
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options => 
@@ -44,7 +53,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserTagPointsService, UserTagPointsService>();
 
-var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? throw new Exception("Frontend Url not found");
+var frontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? throw new System.Exception("Frontend Url not found");
 builder.Services.AddCors(x => x.AddPolicy("BloggigFrontend", builder =>
 {
     builder.WithOrigins(frontendUrl)
@@ -54,7 +63,7 @@ builder.Services.AddCors(x => x.AddPolicy("BloggigFrontend", builder =>
 }));
 
 //Adiciona DbContext e a conex�o com o SQL Server
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new System.Exception("Connection string not found");
 builder.Services.AddDbContext<BloggigDbContext>(options => {
     options.UseSqlServer(connectionString);
 });
@@ -70,9 +79,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (app.Environment.IsProduction())
+{
+    var forwardedHeaderOptions = new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    };
+    forwardedHeaderOptions.KnownNetworks.Clear();
+    forwardedHeaderOptions.KnownProxies.Clear();
+    app.UseForwardedHeaders(forwardedHeaderOptions);
+}
+
+app.UseCors("BloggigFrontend");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseCors("BloggigFrontend");
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -80,11 +101,11 @@ app.Run();
 
 void LoadAutheticationConfig()
 {
-    var googleClientId = builder.Configuration.GetValue<string>("Google:ClientId") ?? throw new Exception("Google client id not found");
-    var googleClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret") ?? throw new Exception("Google client secret not found");
-    var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key") ?? throw new Exception("Jwt key not found");
-    var validIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer") ?? throw new Exception("Issuer not found");
-    var validAudience = builder.Configuration.GetValue<string>("Jwt:Audience") ?? throw new Exception("Audience not found");
+    var googleClientId = builder.Configuration.GetValue<string>("Google:ClientId") ?? throw new System.Exception("Google client id not found");
+    var googleClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret") ?? throw new System.Exception("Google client secret not found");
+    var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key") ?? throw new System.Exception("Jwt key not found");
+    var validIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer") ?? throw new System.Exception("Issuer not found");
+    var validAudience = builder.Configuration.GetValue<string>("Jwt:Audience") ?? throw new System.Exception("Audience not found");
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -94,7 +115,7 @@ void LoadAutheticationConfig()
     .AddCookie(options =>
     {
         options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.None;
         options.Events.OnValidatePrincipal = async context =>
         {

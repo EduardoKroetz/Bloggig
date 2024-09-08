@@ -22,8 +22,8 @@ public class GoogleApiService : IGoogleApiService
     {
         var httpClient = _httpClientFactory.CreateClient();
 
-        var clientId = _configuration["Google:ClientId"] ?? throw new Exception("Invalid google client id");
-        var clientSecret = _configuration["Google:ClientSecret"] ?? throw new Exception("Invalid google client secret");
+        var clientId = _configuration["Google:ClientId"] ?? throw new System.Exception("Invalid google client id");
+        var clientSecret = _configuration["Google:ClientSecret"] ?? throw new System.Exception("Invalid google client secret");
         var requestBody = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("code", code),

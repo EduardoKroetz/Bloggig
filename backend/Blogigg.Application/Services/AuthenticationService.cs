@@ -29,7 +29,7 @@ public class AuthenticationService : IAuthenticationService
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-        var frontendUrl = _configuration["FrontendUrl"] ?? throw new Exception("Invalid frontend Url");
+        var frontendUrl = _configuration["FrontendUrl"] ?? throw new System.Exception("Invalid frontend Url");
 
         var authProperties = new AuthenticationProperties
         {

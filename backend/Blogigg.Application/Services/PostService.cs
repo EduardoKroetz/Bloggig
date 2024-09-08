@@ -139,7 +139,7 @@ public class PostService : IPostService
         var cachedPosts = await _cache.GetStringAsync(allPostsKeyCache);
         if (cachedPosts != null)
         {
-            allPosts = JsonConvert.DeserializeObject<List<Post>>(cachedPosts) ?? throw new Exception("Ocorreu um erro ao deserializar os posts");
+            allPosts = JsonConvert.DeserializeObject<List<Post>>(cachedPosts) ?? throw new System.Exception("Ocorreu um erro ao deserializar os posts");
             //Se estão em cache, filtrar eles
             allPosts = FilterFeedPosts(allPosts, userId, recommendedPageSize, exploratoryPageSize, pageNumber);
   

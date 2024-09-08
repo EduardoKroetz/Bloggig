@@ -12,6 +12,7 @@ WORKDIR /app
 COPY --from=build /out .
 
 EXPOSE 80
+EXPOSE 443
 
 # Comando para rodar a aplicação
 ENTRYPOINT ["dotnet", "Blogigg.Presentation.dll"]

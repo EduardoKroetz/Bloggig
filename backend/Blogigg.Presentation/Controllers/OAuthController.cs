@@ -25,7 +25,7 @@ public class OAuthController : Controller
         _configuration = configuration;
         _userService = userService;
         _googleApiService = googleApiService;
-        _frontendUrl = _configuration["FrontendUrl"] ?? throw new Exception("Não foi possível obter a Url do site");
+        _frontendUrl = _configuration["FrontendUrl"] ?? throw new System.Exception("Não foi possível obter a Url do site");
         _authenticationService = authenticationService;
     }
 
@@ -39,7 +39,7 @@ public class OAuthController : Controller
     [HttpGet("google/login")]
     public IActionResult LoginWithGoogle()
     {
-        var redirectUrl = Url.Action("OAuthRedirect", "OAuth");
+        var redirectUrl = Url.Action("OAuthRedirect", "OAuth", new { provider = "Google" }, protocol: "https");
         var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }

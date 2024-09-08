@@ -5,6 +5,7 @@ services:
     image: eduardokroetz/bloggig-api:latest
     ports:
       - "80:80"
+      - "443:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:

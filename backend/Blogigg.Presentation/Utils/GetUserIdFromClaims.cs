@@ -8,7 +8,7 @@ public static partial class Utils
     {
         return new Guid
        (
-           User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new Exception("Não foi possível obter o id do usuário, faça login novamente")
+           User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new System.Exception("Não foi possível obter o id do usuário, faça login novamente")
        );
     }
 }

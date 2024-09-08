@@ -16,15 +16,15 @@ public class AzureBlobStorageService : IAzureBlobStorageService
     public AzureBlobStorageService(IConfiguration configuration)
     {
         _configuration = configuration;
-        _blobFileServiceUrl = _configuration["Azure:BlobFileServiceUrl"] ?? throw new Exception("Invalid blob file service url");
-        var blobConnectionString = _configuration["Azure:BlobStorageConnectionString"] ?? throw new Exception("Invalid blob storage connection string");
+        _blobFileServiceUrl = _configuration["Azure:BlobFileServiceUrl"] ?? throw new System.Exception("Invalid blob file service url");
+        var blobConnectionString = _configuration["Azure:BlobStorageConnectionString"] ?? throw new System.Exception("Invalid blob storage connection string");
         _blobServiceClient = new BlobServiceClient(blobConnectionString);
 
     }
 
     public async Task<string> UploadProfileImageAsync(string Base64Img, string username)
     {
-        var blobContainerName = _configuration["Azure:BlobProfileImagesContainerName"] ?? throw new Exception("Invalid blob profile images container name");
+        var blobContainerName = _configuration["Azure:BlobProfileImagesContainerName"] ?? throw new System.Exception("Invalid blob profile images container name");
         //Busca o container de imagens
         var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
 
@@ -71,7 +71,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
 
     public async Task<string> UploadPostThumbnailAsync(string Base64Img, string postTitle)
     {
-        var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new Exception("Invalid blob posts thumbnail container name");
+        var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new System.Exception("Invalid blob posts thumbnail container name");
         //Busca o container de imagens
         var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
 
@@ -120,7 +120,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
         //Pega o nome do blob
         var blobName = thumbnailUrl.Split('/').Last();
 
-        var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new Exception("Invalid blob posts thumbnail container name");
+        var blobContainerName = _configuration["Azure:BlobPostsThumbnailContainerName"] ?? throw new System.Exception("Invalid blob posts thumbnail container name");
         
         //Busca o container de imagens
         var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
@@ -136,7 +136,7 @@ public class AzureBlobStorageService : IAzureBlobStorageService
     {
         var blobName = profileImgUrl.Split('/').Last();
 
-        var blobContainerName = _configuration["Azure:BlobProfileImagesContainerName"] ?? throw new Exception("Invalid blob profile images container name");
+        var blobContainerName = _configuration["Azure:BlobProfileImagesContainerName"] ?? throw new System.Exception("Invalid blob profile images container name");
         
         //Busca o container de imagens
         var containerClient = _blobServiceClient.GetBlobContainerClient(blobContainerName);
