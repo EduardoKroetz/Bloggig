@@ -10,6 +10,8 @@ import { NewPostComponent } from './pages/new-post/new-post.component';
 import { EditPostComponent } from './pages/edit-post/edit-post.component';
 import { SearchComponent } from './pages/search/search.component';
 import { ProfileImageComponent } from './pages/profile-image/profile-image.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component';
 
 export const routes: Routes = 
 [
@@ -32,8 +34,14 @@ export const routes: Routes =
       { path: 'posts/new-post', component: NewPostComponent },
       { path: 'posts/edit-post/:id', component: EditPostComponent },
       { path: 'search', component: SearchComponent },
-      { path: "profile-image", component: ProfileImageComponent }
-    ] 
+      { path: "profile-image", component: ProfileImageComponent },
+    ],
+  },
+  {
+    path: "terms-of-service", component: TermsOfServiceComponent 
+  },
+  {
+    path: "privacy-policy", component: PrivacyPolicyComponent
   },
   {
     path: '**', redirectTo: 'feed', pathMatch: "full"

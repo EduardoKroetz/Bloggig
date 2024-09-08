@@ -1,19 +1,23 @@
-<div class="flex max-w-full items-center justify-between bg-gray-200 gap-1 p-4 relative">
-  <app-bgig-logo class="w-[50px] duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
-  <div class="flex justify-end gap-1 sm:gap-4 w-full">
-    <app-search-form class="flex-1 flex justify-end"></app-search-form>
+<div class="flex items-center justify-between bg-gray-200 gap-1 p-4 relative">
+  <app-bgig-logo class="min-w-[50px] min-h-[50px] max-h-[50px] max-w-[50px] flex items-center duration-300 hover:cursor-pointer " routerLink="/feed"></app-bgig-logo>
+  <div class="flex w-full sm:w-1/2 lg:w-1/3 justify-center sm:justify-end items-center gap-1 sm:gap-4">
+    <app-search-form class="w-full"></app-search-form>
     <div *ngIf="user; else elseNoUser" (click)="toggleModal()">
       <app-user-profile-img [user]="user"></app-user-profile-img>
     </div>
-  </div>
+  </div> 
 
   <!-- Modal para exibir opções de ações do usuário -->
   <app-menu-modal class="fixed z-50" (closeModal)="toggleModal()" [modalIsOpen]="modalIsOpen" [userProfileUrl]="userProfileUrl"></app-menu-modal>
 </div>
 
 <ng-template #elseNoUser>
-  <div class="flex gap-5">
-    <app-register-button></app-register-button>
-    <app-login-button></app-login-button>
+  <div class="flex gap-2">
+    <button routerLink="/auth/register" class="bg-green-600 text-sm rounded p-2 hover:bg-green-700 duration-200 text-white">
+      Registrar
+    </button>
+    <button routerLink="/auth/login" class="bg-blue-600 text-sm rounded p-2 hover:bg-blue-700 duration-200 text-white">
+      Entrar
+    </button>
   </div>
 </ng-template>

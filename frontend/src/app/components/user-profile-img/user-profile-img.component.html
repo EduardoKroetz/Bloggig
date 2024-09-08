@@ -1,5 +1,5 @@
 <div *ngIf="user" class="rounded-full p-1 hover:cursor-pointer hover:bg-gray-300 duration-300">
-  <img class="rounded-full w-[40px] h-[40px]" *ngIf="user.profileImageUrl; else elseNoUserProfileImage" [src]="user.profileImageUrl" />
+  <img class="rounded-full min-w-[40px] min-h-[40px] max-h-[40px] max-h-[40px]" *ngIf="user.profileImageUrl; else elseNoUserProfileImage" [src]="user.profileImageUrl" />
 </div>
 
 <ng-template #elseNoUserProfileImage>

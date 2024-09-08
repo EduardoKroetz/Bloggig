@@ -31,8 +31,6 @@ export class UserProfileService {
       .pipe(
         map(response => ({ user: response.data, loading: false })),
         catchError(error => {
-          this.alertService.toggleModal();
-          this.alertService.modalMessage = "Não foi possível carregar as informações do usuário"
           return of({ user: null, loading: false })
         })
       )

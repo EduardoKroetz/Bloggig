@@ -4,7 +4,9 @@
       <app-post [post]="post"></app-post>
     </div>
     <div class="h-[200px] flex  justify-center" *ngIf="!loadingPosts; else elseLoading">
-      <button (click)="getPosts()" class="bg-blue-400 border mb-10 mt-3 rounded-xl w-full p-2 hover:bg-blue-500 hover:text-white duration-200 max-h-[50px]">Carregar mais</button>
+      <button [disabled]="loadingPosts" (click)="getPosts()" class="bg-blue-400 border mb-10 mt-3 rounded-xl w-full p-2 hover:bg-blue-500 hover:text-white duration-200 max-h-[50px]">
+        {{ error ? "Tentar novamente" : "Carregar mais" }}
+      </button>
     </div>
 
   </div>

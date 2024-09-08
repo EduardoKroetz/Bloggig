@@ -1,11 +1,9 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BgigLogoComponent } from "../bgig-logo/bgig-logo.component";
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserProfileImgComponent } from "../user-profile-img/user-profile-img.component";
 import { UserProfileService } from '../../services/user-profile.service';
-import { RegisterButtonComponent } from "../register-button/register-button.component";
-import { LoginButtonComponent } from "../login-button/login-button.component";
 import User from '../../interfaces/User';
 import { CloseIconComponent } from "../close-icon/close-icon.component";
 import { UserIconComponent } from "../user-icon/user-icon.component";
@@ -17,7 +15,7 @@ import { SearchFormComponent } from '../search-form/search-form.component';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, RegisterButtonComponent, LoginButtonComponent, CloseIconComponent, UserIconComponent, GearIconComponent, LogoutButtonComponent, MenuModalComponent, SearchFormComponent],
+  imports: [BgigLogoComponent, RouterLink, CommonModule, UserProfileImgComponent, CloseIconComponent, UserIconComponent, GearIconComponent, LogoutButtonComponent, MenuModalComponent, SearchFormComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
