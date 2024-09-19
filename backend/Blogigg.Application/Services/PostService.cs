@@ -146,7 +146,7 @@ public class PostService : IPostService
 
             var cacheOptions = new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
             };
 
             await _cache.SetStringAsync(allPostsKeyCache, allPostsString, cacheOptions);

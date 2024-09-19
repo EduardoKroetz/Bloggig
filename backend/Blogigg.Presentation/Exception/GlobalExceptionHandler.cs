@@ -8,6 +8,7 @@ public class GlobalExceptionHandler : IExceptionHandler
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, System.Exception exception, CancellationToken cancellationToken)
     {
         var statusCode = 400;
+        var message = "Ocorreu um erro ao processar a requisição";
         switch (exception)
         {
             case ArgumentException:
@@ -15,14 +16,16 @@ public class GlobalExceptionHandler : IExceptionHandler
                 break;
             case UnauthorizedAccessException: 
                 statusCode = 401;
+                message = "Você não está autorizado a acessar esse recurso";
                 break;
             default:
                 statusCode = 500;
+                message = "Ocorreu um erro interno do servidor ao processar a requisição";
                 break;
 
         }
 
-        var response = ResultDto.BadResult(exception.Message);
+        var response = ResultDto.BadResult(message);
 
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/json";

@@ -48,46 +48,54 @@ public class OAuthController : Controller
     [HttpGet("redirect")]
     public async Task<IActionResult> OAuthRedirect()
     {
-        //Obtém o token de acesso do google do usuário  
-        var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        if (!authenticateResult.Succeeded)
+        try
         {
-            return BadRequest(ResultDto.BadResult("Falha na autenticação"));
-        }
-
-        var accessToken = authenticateResult.Properties.Items["access_token"];
-        if (string.IsNullOrEmpty(accessToken))
-        {
-            return BadRequest(ResultDto.BadResult("Token de acesso não encontrado"));
-        }
-
-        //Solicita as informações do usuário ao google 
-        var userInfo = await _googleApiService.GetUserInfo(accessToken);
-
-        var userExists = await _userService.GetUserByEmailAsync(userInfo.Email);
-        if (userExists == null)
-        {
-            //Cria um novo usuário
-            var createUserDto = new CreateOAuthUserDto
+            //Obtém o token de acesso do google do usuário  
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!authenticateResult.Succeeded)
             {
-                Username = userInfo.Name,
-                Email = userInfo.Email,
-                Password = "",  // Senha vazia para usuários OAuth
-                ProfileImageUrl = userInfo.Picture,  
-            };
+                return BadRequest(ResultDto.BadResult("Falha na autenticação"));
+            }
 
-            userExists = await _userService.AddUserAsync(createUserDto);
-        }else
-        {
-            //Atualiza o usuário existente
-            userExists.UpdateEmail(userInfo.Email);
-            userExists.UpdateProfileImage(userInfo.Picture);
+            var accessToken = authenticateResult.Properties.Items["access_token"];
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                return BadRequest(ResultDto.BadResult("Token de acesso não encontrado"));
+            }
 
-            await _userService.UpdateUserAsync(userExists);
+            //Solicita as informações do usuário ao google 
+            var userInfo = await _googleApiService.GetUserInfo(accessToken);
+
+            var userExists = await _userService.GetUserByEmailAsync(userInfo.Email);
+            if (userExists == null)
+            {
+                //Cria um novo usuário
+                var createUserDto = new CreateOAuthUserDto
+                {
+                    Username = userInfo.Name,
+                    Email = userInfo.Email,
+                    Password = "",  // Senha vazia para usuários OAuth
+                    ProfileImageUrl = userInfo.Picture,
+                };
+
+                userExists = await _userService.AddUserAsync(createUserDto);
+            }
+            else
+            {
+                //Atualiza o usuário existente
+                userExists.UpdateEmail(userInfo.Email);
+                userExists.UpdateProfileImage(userInfo.Picture);
+
+                await _userService.UpdateUserAsync(userExists);
+            }
+
+            await _authenticationService.SetCookieAsync(HttpContext, userExists);
+
+            return Redirect(_frontendUrl);
         }
-
-        await _authenticationService.SetCookieAsync(HttpContext, userExists);
-
-        return Redirect(_frontendUrl);
+        catch
+        {
+            return Redirect($"{_frontendUrl}?error=erro interno do servidor");
+        }
     }
 }

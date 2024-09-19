@@ -103,9 +103,6 @@ void LoadAutheticationConfig()
 {
     var googleClientId = builder.Configuration.GetValue<string>("Google:ClientId") ?? throw new System.Exception("Google client id not found");
     var googleClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret") ?? throw new System.Exception("Google client secret not found");
-    var jwtKey = builder.Configuration.GetValue<string>("Jwt:Key") ?? throw new System.Exception("Jwt key not found");
-    var validIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer") ?? throw new System.Exception("Issuer not found");
-    var validAudience = builder.Configuration.GetValue<string>("Jwt:Audience") ?? throw new System.Exception("Audience not found");
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -130,19 +127,6 @@ void LoadAutheticationConfig()
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return Task.CompletedTask;
-        };
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = validIssuer,
-            ValidAudience = validAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     })
     .AddGoogle(options =>
