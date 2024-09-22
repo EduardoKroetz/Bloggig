@@ -24,15 +24,11 @@ export interface IPostFormError {
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.css']
 })
-export class PostFormComponent implements OnChanges {
+export class PostFormComponent {
   @Output() onSubmit = new EventEmitter<IPostForm>();
   @Input() postForm: IPostForm = { title: "", content: "", tags: "", thumbnail: null, thumbnailBase64: "", thumbnailLink: null };
   @Input() postFormError: IPostFormError = {errorContent: null, errorThumbnail: null, errorTitle: null }
   isSumbmitted = false;
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.isSumbmitted = false;
-  }
 
   onThumbnailChange(event: any) {
     if (!this.postForm) return;
@@ -67,7 +63,8 @@ export class PostFormComponent implements OnChanges {
     this.postFormError.errorTitle = null
 
     if (this.postForm) {
-      this.onSubmit.emit(this.postForm); 
+      this.onSubmit.emit(this.postForm);
+      this.isSumbmitted = false;
     }
   }
 }

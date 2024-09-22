@@ -16,7 +16,7 @@ export class NewPostComponent{
   thumbnailBase64 = "";
   postForm : IPostForm = { title: "", content: "", tags: "", thumbnail: null, thumbnailBase64: "", thumbnailLink: null };
   postFormError : IPostFormError = {errorContent: null, errorThumbnail: null, errorTitle: null };
-
+  
   constructor (private postService: PostService, private alertService: AlertModalService) {}
 
   handleSubmit(){
