@@ -64,7 +64,6 @@ export class PostFormComponent {
 
     if (this.postForm) {
       this.onSubmit.emit(this.postForm);
-      this.isSumbmitted = false;
     }
   }
 }
