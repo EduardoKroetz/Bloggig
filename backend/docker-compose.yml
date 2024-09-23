@@ -1,15 +1,13 @@
-version: '3.8'
-
 services:
   api:
     image: eduardokroetz/bloggig-api:latest
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:
       - redis
+      - db
 
   redis:
     image: redis:latest
@@ -17,9 +15,18 @@ services:
       - "6379:6379"
     sysctls:
       - net.core.somaxconn=511
-      - vm.overcommit_memory=1  
     volumes:
       - redisdata:/data
 
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
   redisdata:
+  postgres_data:

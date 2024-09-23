@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+
+await Task.Delay(40000); //Delay para o postgree(container) iniciar completamente
+Console.WriteLine("Iniciando a aplicação...");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +22,16 @@ builder.Services.AddProblemDetails();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
+
+var redisConnection = builder.Configuration.GetConnectionString("RedisConnection") ?? throw new Exception("Invalid redis connection");
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = "redis:6379";
+    options.Configuration = redisConnection;
     options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
     {
         AbortOnConnectFail = false, 
         ConnectTimeout = 5000, 
-        EndPoints = { "redis:6379" }
+        EndPoints = { redisConnection }
     };
 });
 
@@ -65,13 +68,20 @@ builder.Services.AddCors(x => x.AddPolicy("BloggigFrontend", builder =>
 //Adiciona DbContext e a conex�o com o SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new System.Exception("Connection string not found");
 builder.Services.AddDbContext<BloggigDbContext>(options => {
-    options.UseSqlServer(connectionString);
+    options.UseNpgsql(connectionString);
 });
 
 //Configura autentica��o
 LoadAutheticationConfig();
 
 var app = builder.Build();
+
+//Aplicar as migrações
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BloggigDbContext>();
+    dbContext.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())   
 {

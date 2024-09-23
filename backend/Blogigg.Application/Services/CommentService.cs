@@ -25,7 +25,7 @@ public class CommentService : ICommentService
             Content = createCommentDto.Content,
             AuthorId = userId,
             PostId = createCommentDto.PostId,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
         };
 
         await _commentRepository.AddAsync(newComment);

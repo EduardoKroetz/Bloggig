@@ -65,16 +65,11 @@ public class PostsController : ControllerBase
         }
 
         var posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
-        if (posts.Count == 0)
-        {
-            user.CurrentPostsPageNumber = 1;
-            posts = await _postService.GetFeedPostsAsync(userId, pageSize, user.CurrentPostsPageNumber);
-        }
+        if (posts.Count < pageSize)
+            user.CurrentPostsPageNumber = 1;      
         else
-        {
             user.CurrentPostsPageNumber++;
-        }
-
+        
         await _userService.UpdateUserAsync(user);
 
         return Ok(ResultDto.SuccessResult(posts, "Sucesso!"));

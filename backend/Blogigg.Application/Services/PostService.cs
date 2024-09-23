@@ -44,8 +44,8 @@ public class PostService : IPostService
             ThumbnailUrl = thumbnailUrl,
             Status = "created",
             Tags = tags,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
         };
 
         //Salvar no banco de dados
@@ -107,7 +107,7 @@ public class PostService : IPostService
         post.Title = editorPostDto.Title;
         post.Content = editorPostDto.Content;
         post.Status = "updated";
-        post.UpdatedAt = DateTime.Now;
+        post.UpdatedAt = DateTime.UtcNow;
         post.Tags = tags;
 
         await _postRepository.UpdateAsync(post);
@@ -126,8 +126,6 @@ public class PostService : IPostService
 
     public async Task<List<GetPostDto>> GetFeedPostsAsync(Guid userId ,int pageSize, int pageNumber)
     {
-        int exploratoryPageSize = (int)( pageSize / 5 );
-        int recommendedPageSize = pageSize - exploratoryPageSize;
         List<Post> allPosts;
         var allPostsKeyCache = "feed_posts";
 
@@ -137,7 +135,7 @@ public class PostService : IPostService
         {
             allPosts = JsonConvert.DeserializeObject<List<Post>>(cachedPosts) ?? throw new System.Exception("Ocorreu um erro ao deserializar os posts");
             //Se estão em cache, filtrar eles
-            allPosts = FilterFeedPosts(allPosts, userId, recommendedPageSize, exploratoryPageSize, pageNumber);
+            allPosts = FilterRecommendedPosts(allPosts, userId, pageSize, pageNumber);
   
         }else
         {
@@ -151,7 +149,7 @@ public class PostService : IPostService
 
             await _cache.SetStringAsync(allPostsKeyCache, allPostsString, cacheOptions);
 
-            allPosts = FilterFeedPosts(allPosts, userId, recommendedPageSize, exploratoryPageSize, pageNumber);
+            allPosts = FilterRecommendedPosts(allPosts, userId, pageSize, pageNumber);
         }
 
         //Mistura os posts
@@ -180,17 +178,8 @@ public class PostService : IPostService
             }
         }).ToList();
     }
-    
-    private List<Post> FilterFeedPosts(List<Post> allPosts, Guid userId, int recommendedPageSize, int exploratoryPageSize, int pageNumber)
-    {
-        var recommendedPosts = FilterRecommendedPosts(allPosts, userId, recommendedPageSize, pageNumber);
-        var exploratoryPosts = FilterExploratoryPosts(allPosts, exploratoryPageSize);
-        //Concatenar posts recomendados com exploratórios(posts de descoberta)
-        allPosts = [.. recommendedPosts, .. exploratoryPosts];
-        return allPosts;
-    }
 
-    private List<Post> FilterRecommendedPosts(List<Post> posts, Guid userId , int pageSize, int pageNumber)
+    private List<Post> FilterRecommendedPosts(List<Post> posts, Guid userId, int pageSize, int pageNumber)
     {
         return posts
             .Select(post => new
@@ -211,18 +200,6 @@ public class PostService : IPostService
             .ToList();
     }
 
-    private List<Post> FilterExploratoryPosts(List<Post> posts, int pageSize)
-    {
-        if (posts.Count < 50)
-            return [];
-
-        Random random = new Random();
-
-        return posts
-            .OrderBy(x => random.Next())
-            .Take(pageSize)
-            .ToList();
-    }
     public async Task<List<GetPostDto>> GetUserPostsAsync(Guid userId, int pageSize, int pageNumber)
     {
         var posts = await _postRepository.GetUserPostsAsync(userId ,pageSize, pageNumber);
