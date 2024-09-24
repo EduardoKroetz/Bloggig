@@ -11,9 +11,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-await Task.Delay(40000); //Delay para o postgree(container) iniciar completamente
-Console.WriteLine("Iniciando a aplicação...");
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();

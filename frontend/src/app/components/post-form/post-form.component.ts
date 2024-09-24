@@ -64,6 +64,7 @@ export class PostFormComponent {
 
     if (this.postForm) {
       this.onSubmit.emit(this.postForm);
+      setTimeout(() => this.isSumbmitted = false, 2000)
     }
   }
 }
