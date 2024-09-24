@@ -13,17 +13,17 @@ Uma plataforma completa de blog que permite aos usuários autenticarem-se via OA
 - **Comentários**: Adicionar, editar e deletar comentários em posts.
 - **Cache de Posts**: Utilização de Redis para cachear o feed de posts, melhorando a performance.
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Tecnologias
 
 - **Backend**: .NET 8, ASP.NET Core, C#
 - **Frontend**: Angular, Tailwind CSS
-- **Banco de Dados**: SQL Server
+- **Banco de Dados**: PostgreSQL
 - **Cache**: Redis para cachear o feed de posts
 - **Autenticação**: OAuth 2.0, Cookies para gerenciamento de sessões
 - **Armazenamento de Imagens**: Azure Blob Storage para imagens de perfil e postagens
 - **Deploy**:
   - **Backend**: Docker + Azure DevOps
-  - **Banco de Dados**: Azure SQL Database
+  - **Banco de Dados**: Docker + PostgreSQL
   - **Frontend**: Vercel
 
 ## 🖥️ Configuração & Instalação
@@ -34,7 +34,6 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js](https://nodejs.org/) (Para o Angular)
-- [SQL Server](https://www.microsoft.com/pt-br/sql-server/sql-server-downloads)
 - [Redis](https://redis.io/download)
 - [Docker](https://www.docker.com/)
 
@@ -53,7 +52,8 @@ Para configurar o projeto localmente, siga os passos abaixo:
 3. Configure a string de conexão do banco de dados no arquivo `appsettings.json`:
     ```json
     "ConnectionStrings": {
-        "DefaultConnection": "Sua string de conexão do SQL Server aqui"
+        "RedisConnection": "localhost:6379"
+        "DefaultConnection": "Sua string de conexão do postgreSQL aqui"
     },
     "Google": {
       "ClientId": "Seu ClientId do Google para autenticação OAuth",
